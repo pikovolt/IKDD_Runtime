@@ -49,3 +49,62 @@ python -m ikdd.cli \
 - `dummy` — Reference implementation (no external API, uses hardcoded template)
 - `anthropic` — Uses Anthropic Claude API (requires `anthropic` package and `ANTHROPIC_API_KEY`)
 - `openai` — OpenAI stub (not implemented)
+
+## Testing Without API Connection
+
+You can validate the runtime implementation without any API connection using the test suite:
+
+```bash
+cd runtime/v0.2
+python test_generated_code.py
+```
+
+This test script:
+1. ✅ Generates code using the `dummy` provider
+2. ✅ Validates all CDD constraints are satisfied
+3. ✅ Executes the generated code with test data
+4. ✅ Verifies correct output
+
+**No API key required** — Perfect for CI/CD pipelines and local development.
+
+### Provider Comparison
+
+Compare outputs from different providers:
+
+```bash
+# Test single provider
+python compare_providers.py dummy
+
+# Compare dummy vs anthropic (requires ANTHROPIC_API_KEY)
+python compare_providers.py dummy anthropic
+```
+
+This tool shows:
+- ✅ Generation success/failure for each provider
+- ✅ Execution success/failure
+- ✅ Code metrics (lines of code, output rows)
+- ✅ Side-by-side comparison of outputs
+
+### Manual Testing
+
+You can also test manually:
+
+```bash
+# Generate code
+python -m ikdd.cli --tool tool.yaml --knowledge knowledge.yaml --provider dummy --outdir generated
+
+# Create test data
+echo "name,score,category
+Alice,85,A
+Bob,45,B
+Charlie,92,A" > test.csv
+
+# Run generated code
+python -c "
+from generated.csv_filter_exporter import csv_filter_exporter
+csv_filter_exporter('test.csv', 'score', 50, 'output.json')
+"
+
+# Check output
+cat output.json
+```

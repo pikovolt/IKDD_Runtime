@@ -1,0 +1,30 @@
+# Test outputs
+test_data.csv
+output.json
+test.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Generated code (keep in git for reference, but ignore local changes)
+# generated/*.py
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
