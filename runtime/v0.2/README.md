@@ -1,137 +1,21 @@
-# IKDD Runtime v0.2 - Hybrid Runtime
 
-> **決定論とAI推論のハイブリッドアプローチ**
+# IKDD Runtime v0.2 — Hybrid AI Runtime
 
-## 概要
-
-v0.2は、**knowledgeを「参考実装」として扱い、intentに基づいてLLMが適切に組み合わせる**ハイブリッドランタイムです。
-
-## v0.1との違い
-
-| 項目 | v0.1 (Deterministic) | v0.2 (Hybrid) |
-|------|---------------------|---------------|
-| **knowledge** | 完全な実装が必須 | 参考実装でOK |
-| **intent** | ドキュメントのみ | コード生成に使用 |
-| **柔軟性** | 低い | 高い |
-| **再現性** | 100% | 高い（LLMの温度パラメータ次第） |
-| **適用範囲** | 定型処理 | 複雑な要件 |
-
-## 設計思想
-
-### v0.1の問題点
-```yaml
-# v0.1では、snippetが完全でないと動かない
-knowledge:
-  - id: CSV_LOAD
-    snippet: |
-      import csv
-      def load_csv(file_path):
-          # ← この実装が完璧である必要がある
-```
-
-### v0.2のアプローチ
-```yaml
-# v0.2では、snippetは「参考」として扱われる
-knowledge:
-  - id: CSV_LOAD
-    intent: "CSVファイルを読み込んでdict形式で返す"
-    reference_impl: |
-      import csv
-      def load_csv(file_path):
-          with open(file_path) as f:
-              return list(csv.DictReader(f))
-
-    # LLMが intent と reference_impl を参考に、
-    # tool.yaml の intent に最適な実装を生成
-```
-
-## アーキテクチャ（予定）
+✅ v0.2 runtime is **self-contained** and **version isolated**.
 
 ```
-┌─────────────┐
-│ tool.yaml   │  ← WHAT/WHYを明確に記述
-│  + intent   │
-│  + flow     │
-└──────┬──────┘
-       │
-       v
-┌──────────────────┐
-│  LLM Processor   │  ← intentを解釈
-│                  │
-│  1. tool intent  │
-│  2. knowledge    │
-│     reference    │
-│  3. constraint   │
-└────────┬─────────┘
-         │
-         v
-┌────────────────┐
-│ Code Generator │  ← 適切に組み合わせて実装生成
-└────────────────┘
+IKDD_Runtime/
+  ├─ runtime/
+  │   └─ v0.2/
+  │       ├─ ikdd/          ← hybrid runtime source
+  │       ├─ generated/     ← output source from runtime
+  │       ├─ tool.yaml      ← required by v0.2 runtime
+  │       └─ knowledge.yaml ← required by v0.2 runtime
 ```
 
-## 主な機能（計画）
+Run:
 
-### 1. Intent-driven Code Generation
-- `tool.yaml`のintentを理解
-- knowledgeの参考実装を適切にアレンジ
-- 不足する部分はLLMが補完
-
-### 2. Constraint Validation
-- 生成されたコードが制約を満たすか検証
-- AST検証による安全性チェック
-- 型チェック（optional）
-
-### 3. Hybrid Approach
-- 決定論的部分：制約、検証、フロー構造
-- AI推論部分：実装の詳細、最適化
-
-## 使用例（計画）
-
-### tool.yaml
-```yaml
-tool:
-  name: smart_csv_processor
-
-  intent:
-    what: "複数のCSVを読み込み、条件に応じて異なる処理を行う"
-    why: "データソースごとに処理ロジックが異なるため"
-
-  constraints:
-    - must_handle_encoding_errors
-    - must_validate_columns
-    - performance: "10MB以内は1秒以内"
+```bash
+cd runtime/v0.2
+python -m ikdd.cli   --tool tool.yaml   --knowledge knowledge.yaml   --provider dummy   --outdir generated
 ```
-
-### knowledge.yaml
-```yaml
-knowledge:
-  - id: CSV_LOAD
-    intent: "エンコーディングエラーを処理しながらCSVを読み込む"
-    reference_impl: |
-      # 基本的な実装例
-      import csv
-      def load_csv(file_path):
-          with open(file_path, encoding='utf-8') as f:
-              return list(csv.DictReader(f))
-```
-
-v0.2では、この「参考実装」をベースに、`tool.yaml`のintentに合わせて最適化されたコードが生成されます。
-
-## ステータス
-
-🚧 **開発中** - v0.2は現在設計・実装段階です
-
-## 技術スタック（予定）
-
-- Python 3.8+
-- LLM API (OpenAI / Anthropic / ローカルLLM)
-- AST Parser / Validator
-- YAML Parser
-- Type Checker (optional)
-
----
-
-**バージョン:** v0.2 (In Development)
-**ステータス:** Planning / Design Phase
-**アーキテクチャ:** Hybrid (Deterministic + AI Inference)
