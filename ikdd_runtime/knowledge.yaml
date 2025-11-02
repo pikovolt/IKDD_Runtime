@@ -1,0 +1,29 @@
+knowledge:
+  - id: CSV_LOAD
+    snippet: |
+      import csv
+      def load_csv(file_path):
+          with open(file_path, newline='', encoding="utf-8") as f:
+              return list(csv.DictReader(f))
+
+  - id: FILTER_ROWS
+    snippet: |
+      def filter_rows(rows, filter_column, threshold):
+          out = []
+          for row in rows:
+              val = row.get(filter_column)
+              if val is None:
+                  continue
+              try:
+                  if int(val) >= int(threshold):
+                      out.append(row)
+              except ValueError:
+                  continue
+          return out
+
+  - id: JSON_EXPORT
+    snippet: |
+      import json
+      def export_json(rows, file_path):
+          with open(file_path, "w", encoding="utf-8") as f:
+              json.dump(rows, f, ensure_ascii=False, indent=2)

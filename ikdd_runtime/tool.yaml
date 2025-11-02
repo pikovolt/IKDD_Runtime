@@ -1,0 +1,19 @@
+tool:
+  name: csv_filter_exporter
+
+  intent:
+    what: "CSV を条件でフィルタして JSON に出力する"
+    why: "毎回 Excel で手作業は無駄"
+
+  flow:
+    - step: CSV_LOAD
+      input: [csv_file]
+      output: rows
+
+    - step: FILTER_ROWS
+      input: [rows, filter_column, threshold]
+      output: filtered
+
+    - step: JSON_EXPORT
+      input: [filtered, json_file]
+      output:
