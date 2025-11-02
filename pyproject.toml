@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ikdd-runtime"
+version = "0.2.0"
+description = "IKDD Hybrid AI Runtime"
+requires-python = ">=3.10"
+
+# ランタイムに必要なら pip install する依存関係
+dependencies = [
+    "pyyaml",
+]
+
+# ★ CLI entry point ★
+[project.scripts]
+ikdd = "runtime.v0.2.cli:main"

@@ -191,7 +191,118 @@ pytest test_generated_code.py
 
 ---
 
-## 9. まとめ
+## 9. 🚀 CLI でコード生成する（v0.2 Hybrid AI Runtime）
+
+IKDD Runtime v0.2 では、LLM に実装生成を委任できます。
+次のコマンドだけで、`tool.yaml` と `knowledge.yaml` からコードを自動生成できます：
+
+```sh
+ikdd generate tool.yaml knowledge.yaml
+```
+
+出力例：
+
+```
+✅ Code generated → generated/output.py
+```
+
+---
+
+### 📦 インストール
+
+開発中のローカルプロジェクトを install します：
+
+```sh
+pip install -e .
+```
+
+もし pyproject.toml を使っている場合は：
+
+```toml
+[project.scripts]
+ikdd = "runtime.v0.2.cli:main"
+```
+
+setup.cfg の場合は：
+
+```ini
+[options.entry_points]
+console_scripts =
+    ikdd = runtime.v0.2.cli:main
+```
+
+---
+
+### 🧠 仕組み（内部動作）
+
+```
+tool.yaml  → WHY/WHAT（目的・制約）
+knowledge.yaml → HOW（実装ヒント）
+↓
+ikdd generate
+↓
+Runtime が LLM に実装生成を依頼
+↓
+generated/output.py が自動生成される
+```
+
+---
+
+### ✍️ 例：tool.yaml
+
+```yaml
+tool:
+  name: csv_filter_exporter
+  intent:
+    what: "CSV の行をフィルタして JSON 保存する"
+    why: "手作業の Excel 処理のため時間が無駄"
+  constraints:
+    must_use: [CSV_LOAD, FILTER_ROWS, JSON_EXPORT]
+    forbidden_modules: [pandas]
+    immutable_params: [filter_column, threshold]
+  flow:
+    - step: CSV_LOAD
+      input: [csv_file]
+      output: rows
+```
+
+### ✍️ 例：knowledge.yaml
+
+```yaml
+knowledge:
+  - id: CSV_LOAD
+    snippet: |
+      # CSV を DictReader を使って読み込む
+      import csv
+      with open(csv_file) as f:
+          rows = list(csv.DictReader(f))
+```
+
+---
+
+### ✅ 実行結果（AI が生成したコードの例）
+
+```python
+def csv_filter_exporter(csv_file, filter_column, threshold, json_file):
+    rows = load_csv(csv_file)
+    filtered = filter_rows(rows, filter_column, threshold)
+    export_json(filtered, json_file)
+```
+
+---
+
+### 💡 ポイント
+
+| Runtime  | LLM     |
+| -------- | ------- |
+| 文脈・制約を制御 | 実装を生成する |
+
+あなたは **意図と制約（tool.yaml）** を書くだけ。
+実装は AI が作ります。
+
+---
+
+## 10. まとめ
 
 > **人が書くのは 意図 と 制約**
 > **AI が書くのは HOW（実装）**
