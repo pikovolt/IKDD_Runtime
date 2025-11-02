@@ -1,18 +1,14 @@
-# IKDD Runtime v0.1
-> Instrumental Knowledge Driven Development — *“実装ではなく、意図を設計する”*
+# IKDD Runtime
+> Instrumental Knowledge Driven Development — *"実装ではなく、意図を設計する"*
 
-IKDD Runtime は、**AI に依存せずに意図（WHAT / WHY）をコードに変換できる**  
-新しい開発スタイルのための実行システムです。
-
-従来の AI コード生成は *推論（best guess）* でしたが、  
-IKDD は **決定論（deterministic）** を重視します。
+**意図（WHAT / WHY）をコードに変換する新しい開発スタイルのための実行システム**
 
 ---
 
 ## 🚧 解決する問題
 
-✅ AI に任せると **意図がずれる（Semantic Drift）**  
-✅ 同じ指示なのに **毎回違うコードが生成される**  
+✅ AI に任せると **意図がずれる（Semantic Drift）**
+✅ 同じ指示なのに **毎回違うコードが生成される**
 ✅ プロンプトが肥大化して **メンテできなくなる**
 
 **IKDD Runtime のアプローチ**
@@ -20,17 +16,80 @@ IKDD は **決定論（deterministic）** を重視します。
 | 役割 | 意味 |
 |------|------|
 | `tool.yaml` | WHY / WHAT（実装したい意図とデータフロー） |
-| `knowledge.yaml` | HOW（実装の部品） |
+| `knowledge.yaml` | HOW（実装の部品または参考実装） |
 | `generated/*.py` | IKDD Runtime が生成した実装 |
+
+---
+
+## 🏗️ プロジェクト構造
+
+```
+IKDD_Runtime/
+  ├─ runtime/
+  │   ├─ v0.1/             ← Deterministic Runtime (Stable)
+  │   └─ v0.2/             ← Hybrid Runtime (In Development)
+  ├─ docs/
+  │   └─ CONCEPT_IKDD-CDD.md
+  ├─ examples/
+  ├─ README.md
+  └─ LICENSE
+```
+
+---
+
+## 📦 Runtime Versions
+
+### [v0.1 - Deterministic Runtime](runtime/v0.1/)
+**完全決定論的なコード生成システム**
+
+| 特徴 | 詳細 |
+|------|------|
+| **アプローチ** | 事前定義されたsnippetを機械的に組み立て |
+| **AI推論** | なし |
+| **再現性** | 100%（同じ入力 → 同じ出力） |
+| **knowledge** | 完全な実装が必須 |
+| **適用範囲** | 定型的な処理、明確なフロー |
+| **ステータス** | ✅ Stable |
+
+```bash
+cd runtime/v0.1
+python -m ikdd.cli tool.yaml knowledge.yaml
+```
+
+👉 [v0.1の詳細はこちら](runtime/v0.1/README.md)
+
+---
+
+### [v0.2 - Hybrid Runtime](runtime/v0.2/)
+**決定論とAI推論のハイブリッドアプローチ**
+
+| 特徴 | 詳細 |
+|------|------|
+| **アプローチ** | intentを理解し、参考実装を適切にアレンジ |
+| **AI推論** | あり（実装の詳細、最適化） |
+| **再現性** | 高い（温度パラメータ次第） |
+| **knowledge** | 参考実装でOK |
+| **適用範囲** | 複雑な要件、柔軟な処理 |
+| **ステータス** | 🚧 In Development |
+
+```bash
+cd runtime/v0.2
+# 開発中...
+```
+
+👉 [v0.2の詳細はこちら](runtime/v0.2/README.md)
 
 ---
 
 ## 🧠 IKDD の基本思想
 
-> **実装は「道具（knowledge）」、  
+> **実装は「道具（knowledge）」、
 > 意図は「tool」で宣言する。**
 
+### 例：CSVフィルタリング処理
+
 ```yaml
+# tool.yaml
 tool:
   name: csv_filter_exporter
 
@@ -50,15 +109,10 @@ tool:
     - step: JSON_EXPORT
       input: [filtered, json_file]
       output:        # ← 出力なし = 副作用 OK
-````
-
-フロー（flow）だけ記述 → **IKDD Runtime がコードを生成**。
-
----
-
-## 🔧 knowledge（実装の部品）
+```
 
 ```yaml
+# knowledge.yaml
 knowledge:
   - id: CSV_LOAD
     snippet: |
@@ -68,71 +122,18 @@ knowledge:
               return list(csv.DictReader(f))
 ```
 
-### ✅ 特徴
-
-* **実装を外に出す**（HOWを混ぜない）
-* snippet はそのまま Python に埋め込まれる
-* AST による安全性検証あり（`exec`, `os.system` などを自動拒否）
+フロー（flow）だけ記述 → **IKDD Runtime がコードを生成**。
 
 ---
 
-## ▶️ 実行方法
+## 🔐 セキュリティ
 
-### 1. コード生成
+すべてのバージョンで**AST検証による安全性チェック**を実装：
 
-```bash
-python -m ikdd.cli tool.yaml knowledge.yaml
-```
-
-生成物：
-
-```
-generated/csv_filter_exporter.py
-```
-
-### 2. 利用
-
-```python
-from generated.csv_filter_exporter import csv_filter_exporter
-
-csv_filter_exporter(
-    csv_file="input.csv",
-    filter_column="score",
-    threshold=80,
-    json_file="result.json",
-)
-```
-
----
-
-## 🔐 セキュリティ（AST検証）
-
-以下は禁止され、検出すると例外になります：
-
-| 危険要素        | 例                                       |
-| ----------- | --------------------------------------- |
-| **危険関数**    | `exec`, `eval`, `compile`, `__import__` |
-| **危険モジュール** | `os`, `sys`, `subprocess`, `shutil`     |
-
----
-
-## 📦 プロジェクト構成
-
-```
-ikdd_runtime/
-├── ikdd/
-│   ├── cli.py
-│   ├── loader/
-│   │   ├── tool_loader.py
-│   │   └── knowledge_loader.py
-│   ├── generator/
-│   │   └── impl_generator.py
-│   └── validator/
-│       └── constraint_validator.py
-├── tool.yaml
-├── knowledge.yaml
-└── generated/
-```
+| 危険要素 | 例 |
+|----------|-----|
+| 危険関数 | `exec`, `eval`, `compile`, `__import__` |
+| 危険モジュール | `os`, `sys`, `subprocess`, `shutil` |
 
 ---
 
@@ -149,14 +150,63 @@ ikdd_runtime/
 
 ---
 
-## License
+## 📚 ドキュメント
+
+- [IKDD/CDD Concept](docs/CONCEPT_IKDD-CDD.md) - IKDD/CDDの概念と思想
+- [v0.1 Documentation](runtime/v0.1/README.md) - v0.1の詳細ドキュメント
+- [v0.2 Documentation](runtime/v0.2/README.md) - v0.2の設計・開発状況
+
+---
+
+## 🚀 Quick Start
+
+### v0.1を試す（Stable）
+
+```bash
+cd runtime/v0.1
+python -m ikdd.cli tool.yaml knowledge.yaml
+```
+
+生成されたコードを使う：
+```python
+from generated.csv_filter_exporter import csv_filter_exporter
+
+csv_filter_exporter(
+    csv_file="input.csv",
+    filter_column="score",
+    threshold=80,
+    json_file="result.json",
+)
+```
+
+---
+
+## 🤝 Contributing
+
+開発中のv0.2への貢献を歓迎します！
+
+1. Fork this repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
 
 MIT License
 
 ---
 
-## Author
+## 👤 Author
 
 pikovolt
 
 ---
+
+## 🔗 Links
+
+- [GitHub Repository](https://github.com/pikovolt/IKDD_Runtime)
+- [Issue Tracker](https://github.com/pikovolt/IKDD_Runtime/issues)
+
