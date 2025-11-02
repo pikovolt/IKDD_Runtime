@@ -137,14 +137,16 @@ knowledge:
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ IKDD Runtime Roadmap
 
-| Version | 内容 | ステータス |
-|---------|------|-----------|
-| **v0.1** | Deterministic Runtime<br>- flow + knowledge + codegen | ✅ Stable |
-| **v0.2** | Hybrid Runtime<br>- Intent-driven generation<br>- Reference implementation<br>- Constraint validation | 🚧 In Development |
-| **v0.3** | Advanced Features<br>- 型検証（optional type）<br>- Performance optimization | 🔮 Planned |
-| **v0.4** | Knowledge Management<br>- Knowledge versioning<br>- Knowledge reuse & sharing | 🔭 Future |
+| version                                       | ステータス    | 目的 / 内容                                                                                                            |
+| --------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| ✅ **v0.1 — Deterministic Codegen (完了)**       | Done     | `flow + knowledge + codegen` による **決定論的なコード生成**（LLM 非依存 / snippet 貼り付け方式）                                          |
+| 🔜 **v0.2 — Hybrid AI Codegen (LLM導入)**       | Next     | **WHY/WHAT（intent）× HOW（knowledge snippet）× CDD（制約）** → AI による実装生成。snippet は「完成コード」ではなく **Few-shot / 実装ヒント** として扱う |
+| 🔧 **v0.3 — Constraint Validation**           | Planned  | CDD: `must / forbidden / immutable / safe` を実装。**AI の暴走を防ぐ「枠」** を Runtime で検証                                      |
+| 🧪 **v0.4 — Optional Type + Static Checking** | Optional | 型情報に基づく **データフロー整合性チェック**（型は必須ではない / 記述すれば検証される）                                                                   |
+| 🔁 **v0.5 — Knowledge Versioning / Reuse**    | Future   | snippet 改善 → 自動差分管理。**学習して育つ knowledge base**                                                                      |
+| 🌐 **v1.0 — Full IKDD / CDD**                 | Vision   | 人間は **意図（WHY/WHAT）を書く** → AI が **実装（HOW）を生成**。Runtime が **逸脱を防ぐ**                                                  |
 
 ---
 
