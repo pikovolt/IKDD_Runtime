@@ -50,7 +50,11 @@ python -m ikdd.cli \
 - `anthropic` — Uses Anthropic Claude API (requires `anthropic` package and `ANTHROPIC_API_KEY`)
 - `openai` — OpenAI stub (not implemented)
 
-## Testing Without API Connection
+## Testing
+
+📖 **Comprehensive Testing Guide**: See [TESTING_GUIDE.md](TESTING_GUIDE.md) for detailed testing instructions.
+
+### Quick Start Testing Without API Connection
 
 You can validate the runtime implementation without any API connection using the test suite:
 
