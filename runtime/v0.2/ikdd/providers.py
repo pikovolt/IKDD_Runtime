@@ -55,3 +55,55 @@ class OpenAIProvider:
         self.model = model
     def generate(self, prompt: str) -> GenerateResponse:
         raise NotImplementedError("Wire your OpenAI call here (kept out to avoid external deps).")
+
+class AnthropicProvider:
+    """
+    Anthropic Claude API provider.
+    Requires: pip install anthropic
+    Set environment variable: ANTHROPIC_API_KEY
+    """
+    def __init__(self, model: str = "claude-3-5-sonnet-20241022"):
+        self.model = model
+
+    def generate(self, prompt: str) -> GenerateResponse:
+        import os
+        try:
+            import anthropic
+        except ImportError:
+            raise ImportError(
+                "anthropic package not found. Install with: pip install anthropic"
+            )
+
+        api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "ANTHROPIC_API_KEY environment variable not set. "
+                "Get your API key from https://console.anthropic.com/"
+            )
+
+        client = anthropic.Anthropic(api_key=api_key)
+
+        message = client.messages.create(
+            model=self.model,
+            max_tokens=4096,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        # Extract code from response
+        code = message.content[0].text
+
+        # Remove markdown code fences if present
+        if code.startswith("```python"):
+            code = code[len("```python"):].lstrip()
+        elif code.startswith("```"):
+            code = code[3:].lstrip()
+
+        if code.endswith("```"):
+            code = code[:-3].rstrip()
+
+        return GenerateResponse(code=code)

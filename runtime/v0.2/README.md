@@ -13,9 +13,39 @@ IKDD_Runtime/
   │       └─ knowledge.yaml ← required by v0.2 runtime
 ```
 
-Run:
+## Usage
+
+### Basic (Dummy Provider)
 
 ```bash
 cd runtime/v0.2
-python -m ikdd.cli   --tool tool.yaml   --knowledge knowledge.yaml   --provider dummy   --outdir generated
+python -m ikdd.cli \
+  --tool tool.yaml \
+  --knowledge knowledge.yaml \
+  --provider dummy \
+  --outdir generated
 ```
+
+### With Anthropic Claude
+
+```bash
+# Install dependency
+pip install anthropic
+
+# Set API key
+export ANTHROPIC_API_KEY="your-api-key-here"
+
+# Run with anthropic provider
+cd runtime/v0.2
+python -m ikdd.cli \
+  --tool tool.yaml \
+  --knowledge knowledge.yaml \
+  --provider anthropic \
+  --outdir generated
+```
+
+### Provider Options
+
+- `dummy` — Reference implementation (no external API, uses hardcoded template)
+- `anthropic` — Uses Anthropic Claude API (requires `anthropic` package and `ANTHROPIC_API_KEY`)
+- `openai` — OpenAI stub (not implemented)

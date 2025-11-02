@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Tuple, List
 from .prompt import load_tool, load_knowledge, assemble_prompt
 from .constraints import run_checks
-from .providers import DummyProvider, OpenAIProvider, Provider
+from .providers import DummyProvider, OpenAIProvider, AnthropicProvider, Provider
 
 @dataclass
 class Options:
@@ -19,6 +19,8 @@ def _get_provider(name: str) -> Provider:
         return DummyProvider()
     elif name == "openai":
         return OpenAIProvider()
+    elif name == "anthropic":
+        return AnthropicProvider()
     else:
         raise ValueError(f"Unknown provider: {name}")
 
@@ -50,7 +52,7 @@ def main(argv=None):
     p.add_argument("--tool", required=True, dest="tool_path")
     p.add_argument("--knowledge", required=True, dest="knowledge_path")
     p.add_argument("--outdir", default="generated")
-    p.add_argument("--provider", choices=["dummy", "openai"], default="dummy")
+    p.add_argument("--provider", choices=["dummy", "openai", "anthropic"], default="dummy")
     p.add_argument("--max-tries", type=int, default=2)
     args = p.parse_args(argv)
     ok, out_path, problems = generate(Options(**vars(args)))
