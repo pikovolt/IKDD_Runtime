@@ -160,6 +160,7 @@ knowledge:
 ## 📚 ドキュメント
 
 - [IKDD/CDD Concept](docs/CONCEPT_IKDD-CDD.md) - IKDD/CDDの概念と思想
+- [Why Definition-First?](docs/WHY_DEFINITION_FIRST.md) - なぜIKDDは「定義を先に書く」のか
 - [v0.1 Documentation](runtime/v0_1/README.md) - v0.1の詳細ドキュメント
 - [v0.2 Documentation](runtime/v0_2/README.md) - v0.2の設計・開発状況
 
