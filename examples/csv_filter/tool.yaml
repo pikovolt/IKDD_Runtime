@@ -1,0 +1,19 @@
+tool:
+  name: csv_filter_exporter
+  intent:
+    what: "CSV の中から条件に合う行を抽出して JSON に出力する"
+    why: "手作業の Excel フィルタが時間の無駄"
+  constraints:
+    must_use: [CSV_LOAD, FILTER_ROWS, JSON_EXPORT]
+    forbidden_modules: [pandas]
+    immutable_params: [filter_column, threshold]
+  flow:
+    - step: CSV_LOAD
+      input: [csv_file]
+      output: rows
+    - step: FILTER_ROWS
+      input: [rows, filter_column, threshold]
+      output: filtered
+    - step: JSON_EXPORT
+      input: [filtered, json_file]
+      output:

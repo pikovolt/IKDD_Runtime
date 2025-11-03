@@ -1,0 +1,26 @@
+knowledge:
+  - id: CSV_LOAD
+    snippet: |
+      # CSV を開いて DictReader で読み込み
+      import csv
+      def load_csv(csv_file):
+          with open(csv_file, newline='', encoding='utf-8') as f:
+              reader = csv.DictReader(f)
+              return list(reader)
+  - id: FILTER_ROWS
+    snippet: |
+      # rows の中から score >= threshold だけ残す
+      def filter_rows(rows, filter_column, threshold):
+          def to_num(v):
+              try:
+                  return float(v)
+              except:
+                  return 0.0
+          return [r for r in rows if to_num(r.get(filter_column, 0)) >= float(threshold)]
+  - id: JSON_EXPORT
+    snippet: |
+      # json.dump を使って出力
+      import json
+      def export_json(rows, json_file):
+          with open(json_file, 'w', encoding='utf-8') as f:
+              json.dump(rows, f, ensure_ascii=False, indent=2)
