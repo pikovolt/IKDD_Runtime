@@ -16,8 +16,35 @@ class KnowledgeSpec:
     items: List[Dict[str, Any]]
 
 def load_tool(path: str) -> ToolSpec:
+    """
+    Load tool specification from YAML file.
+    Supports both:
+    - IKDD DSL format (ikdd: root key)
+    - v0.2 runtime format (tool: root key)
+    """
     with open(path, 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f)
+
+    # Check if IKDD DSL format
+    if 'ikdd' in data:
+        ikdd = data['ikdd']
+        # Convert IKDD DSL → v0.2 runtime schema
+        return ToolSpec(
+            name=ikdd.get('name'),
+            intent={
+                'what': ikdd.get('intent', {}).get('what', ''),
+                'why': ikdd.get('intent', {}).get('why', ''),
+            },
+            constraints={
+                # IKDD DSL: directive.must → runtime.must_use
+                'must_use': ikdd.get('directive', {}).get('must', []),
+                'forbidden_modules': ikdd.get('directive', {}).get('forbidden', []),
+                'immutable_params': ikdd.get('directive', {}).get('immutable', []),
+            },
+            flow=ikdd.get('flow', []),
+        )
+
+    # Standard v0.2 runtime format
     t = data.get('tool', {})
     return ToolSpec(
         name=t.get('name'),
@@ -27,9 +54,35 @@ def load_tool(path: str) -> ToolSpec:
     )
 
 def load_knowledge(path: str) -> KnowledgeSpec:
+    """
+    Load knowledge from YAML file.
+    Supports both:
+    - Array format: knowledge: [{id: ..., snippet: ...}, ...]
+    - Dict format: knowledge: {ID: {description: ..., hint: ...}, ...}
+    """
     with open(path, 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f)
-    return KnowledgeSpec(items=data.get('knowledge', []))
+
+    knowledge_data = data.get('knowledge', [])
+
+    # If dict format (v0.25 style), convert to array format
+    if isinstance(knowledge_data, dict):
+        items = []
+        for kid, content in knowledge_data.items():
+            # Combine description and hint into snippet
+            snippet_parts = []
+            if 'description' in content:
+                snippet_parts.append(f"# {content['description']}")
+            if 'hint' in content:
+                snippet_parts.append(content['hint'])
+            items.append({
+                'id': kid,
+                'snippet': '\n'.join(snippet_parts)
+            })
+        return KnowledgeSpec(items=items)
+
+    # Array format (original v0.2 style)
+    return KnowledgeSpec(items=knowledge_data)
 
 def assemble_prompt(tool: ToolSpec, kn: KnowledgeSpec) -> str:
     must = tool.constraints.get('must_use', [])
