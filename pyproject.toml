@@ -15,4 +15,5 @@ dependencies = [
 
 # ★ CLI entry point ★
 [project.scripts]
-ikdd = "runtime.v0_2.cli:main"
+ikdd = "runtime.v0_2.ikdd.generate:main"
+ikdd-test = "runtime.v0_2.test_generated_code:main"  # for testing purposes
