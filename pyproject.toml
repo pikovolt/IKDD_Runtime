@@ -8,11 +8,11 @@ version = "0.2.0"
 description = "IKDD Hybrid AI Runtime"
 requires-python = ">=3.10"
 
-# ランタイムに必要なら pip install する依存関係
+# Dependencies to pip install if needed for runtime
 dependencies = [
-    "pyyaml",
+    "pyyaml", "openai", "anthropic", "requests"
 ]
 
 # ★ CLI entry point ★
 [project.scripts]
-ikdd = "runtime.v0.2.cli:main"
+ikdd = "runtime.v0_2.cli:main"

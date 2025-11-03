@@ -1,0 +1,38 @@
+ikdd:
+  name: csv_filter_exporter
+
+  intent:
+    what: >
+      CSV の行を条件でフィルタし、
+      JSON に保存する処理を自動生成する。
+    why: >
+      Excel の手動フィルタ作業が時間の無駄になるため、
+      自動化して再利用可能なツールにする。
+
+  domain:
+    use:
+      # HOW（実装）は knowledge で提供
+      - CSV_LOAD
+      - FILTER_ROWS
+      - JSON_EXPORT
+
+  directive:
+    must: [CSV_LOAD, FILTER_ROWS, JSON_EXPORT]
+    forbidden: [pandas]   # pandas禁止 → csv.DictReaderで実装されるべき
+    immutable: [filter_column, threshold]
+
+  flow:
+    - step: CSV_LOAD
+      description: "CSV を読み込み rows として渡す"
+      input: [csv_file]
+      output: rows
+
+    - step: FILTER_ROWS
+      description: "特定カラムの値が threshold 以上の行を残す"
+      input: [rows, filter_column, threshold]
+      output: filtered
+
+    - step: JSON_EXPORT
+      description: "filtered を json に保存する"
+      input: [filtered, json_file]
+      output: saved
