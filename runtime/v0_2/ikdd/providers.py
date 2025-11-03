@@ -61,8 +61,13 @@ class AnthropicProvider:
     Anthropic Claude API provider.
     Requires: pip install anthropic
     Set environment variable: ANTHROPIC_API_KEY
+
+    Available models:
+    - claude-3-5-sonnet-20240620 (recommended, stable)
+    - claude-3-opus-20240229
+    - claude-3-sonnet-20240229
     """
-    def __init__(self, model: str = "claude-3-5-sonnet-20241022"):
+    def __init__(self, model: str = "claude-3-5-sonnet-20240620"):
         self.model = model
 
     def generate(self, prompt: str) -> GenerateResponse:
