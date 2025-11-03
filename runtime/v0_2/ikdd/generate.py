@@ -48,19 +48,47 @@ def generate(opts: Options) -> Tuple[bool, str, List[str]]:
 
 def main(argv=None):
     import argparse
-    p = argparse.ArgumentParser(description="IKDD Runtime v0.2 Hybrid AI code generator")
-    p.add_argument("--tool", required=True, dest="tool_path")
-    p.add_argument("--knowledge", required=True, dest="knowledge_path")
-    p.add_argument("--outdir", default="generated")
-    p.add_argument("--provider", choices=["dummy", "openai", "anthropic"], default="dummy")
-    p.add_argument("--max-tries", type=int, default=2)
+    p = argparse.ArgumentParser(
+        description="IKDD Runtime v0.2 Hybrid AI code generator",
+        epilog="Examples:\n"
+               "  %(prog)s tool.yaml knowledge.yaml\n"
+               "  %(prog)s --tool tool.yaml --knowledge knowledge.yaml --provider anthropic\n",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    # Support both positional and named arguments
+    p.add_argument("tool_path", nargs="?", help="Path to tool YAML (IKDD DSL or v0.2 format)")
+    p.add_argument("knowledge_path", nargs="?", help="Path to knowledge YAML")
+    p.add_argument("--tool", dest="tool_path_named", help="Path to tool YAML (alternative to positional)")
+    p.add_argument("--knowledge", dest="knowledge_path_named", help="Path to knowledge YAML (alternative to positional)")
+    p.add_argument("--outdir", default="generated", help="Output directory (default: generated)")
+    p.add_argument("--provider", choices=["dummy", "openai", "anthropic"], default="dummy",
+                   help="LLM provider (default: dummy)")
+    p.add_argument("--max-tries", type=int, default=2, help="Max constraint validation retries (default: 2)")
+
     args = p.parse_args(argv)
-    ok, out_path, problems = generate(Options(**vars(args)))
-    print(f"Written: {out_path}")
+
+    # Resolve tool_path and knowledge_path (positional takes precedence)
+    tool_path = args.tool_path or args.tool_path_named
+    knowledge_path = args.knowledge_path or args.knowledge_path_named
+
+    if not tool_path or not knowledge_path:
+        p.error("Both tool and knowledge YAML files are required")
+
+    opts = Options(
+        tool_path=tool_path,
+        knowledge_path=knowledge_path,
+        outdir=args.outdir,
+        provider=args.provider,
+        max_tries=args.max_tries
+    )
+
+    ok, out_path, problems = generate(opts)
+    print(f"✅ Written: {out_path}")
     if not ok:
-        print("Constraint violations remained:")
+        print("⚠️  Constraint violations remained:")
         for pr in problems:
-            print(" -", pr)
+            print(f"   - {pr}")
     return 0 if ok else 2
 
 if __name__ == "__main__":
