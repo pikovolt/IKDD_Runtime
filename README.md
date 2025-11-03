@@ -70,11 +70,18 @@ python -m ikdd.cli tool.yaml knowledge.yaml
 | **再現性** | 高い（温度パラメータ次第） |
 | **knowledge** | 参考実装でOK |
 | **適用範囲** | 複雑な要件、柔軟な処理 |
-| **ステータス** | 🚧 In Development |
+| **プロバイダー** | Dummy（APIキー不要）/ Anthropic |
+| **ステータス** | ✅ Ready to Use |
 
 ```bash
-cd runtime/v0.2
-# 開発中...
+# パッケージインストール
+pip install -e .
+
+# コード生成（APIキー不要）
+ikdd runtime/v0_2/tool.yaml runtime/v0_2/knowledge.yaml
+
+# テスト実行
+ikdd-test
 ```
 
 👉 [v0.2の詳細はこちら](runtime/v0.2/README.md)
@@ -141,11 +148,11 @@ knowledge:
 
 | version                                       | ステータス    | 目的 / 内容                                                                                                            |
 | --------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
-| ✅ **v0.1 — Deterministic Codegen (完了)**       | Done     | `flow + knowledge + codegen` による **決定論的なコード生成**（LLM 非依存 / snippet 貼り付け方式）                                          |
-| 🔜 **v0.2 — Hybrid AI Codegen (LLM導入)**       | Next     | **WHY/WHAT（intent）× HOW（knowledge snippet）× CDD（制約）** → AI による実装生成。snippet は「完成コード」ではなく **Few-shot / 実装ヒント** として扱う |
-| 🔧 **v0.3 — Constraint Validation**           | Planned  | CDD: `must / forbidden / immutable / safe` を実装。**AI の暴走を防ぐ「枠」** を Runtime で検証                                      |
-| 🧪 **v0.4 — Optional Type + Static Checking** | Optional | 型情報に基づく **データフロー整合性チェック**（型は必須ではない / 記述すれば検証される）                                                                   |
-| 🔁 **v0.5 — Knowledge Versioning / Reuse**    | Future   | snippet 改善 → 自動差分管理。**学習して育つ knowledge base**                                                                      |
+| ✅ **v0.1 — Deterministic Codegen**       | Done     | `flow + knowledge + codegen` による **決定論的なコード生成**（LLM 非依存 / snippet 貼り付け方式）                                          |
+| ✅ **v0.2 — Hybrid AI Codegen + CDD**       | Done     | **WHY/WHAT（intent）× HOW（knowledge snippet）× CDD（制約）** → AI による実装生成。`must / forbidden / immutable` 制約チェック実装済み |
+| 🧪 **v0.3 — Optional Type + Static Checking** | Planned | 型情報に基づく **データフロー整合性チェック**（型は必須ではない / 記述すれば検証される）                                                                   |
+| 🔁 **v0.4 — Knowledge Versioning / Reuse**    | Future   | snippet 改善 → 自動差分管理。**学習して育つ knowledge base**                                                                      |
+| 🔄 **v0.5 — Multi-Provider Enhancement**    | Future   | より多くのLLMプロバイダー対応（OpenAI完全実装、Gemini、Claudeなど）                                                                      |
 | 🌐 **v1.0 — Full IKDD / CDD**                 | Vision   | 人間は **意図（WHY/WHAT）を書く** → AI が **実装（HOW）を生成**。Runtime が **逸脱を防ぐ**                                                  |
 
 ---
@@ -160,7 +167,84 @@ knowledge:
 
 ## 🚀 Quick Start
 
-### v0.1を試す（Stable）
+### 📦 インストール（共通）
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/pikovolt/IKDD_Runtime.git
+cd IKDD_Runtime
+
+# パッケージをインストール（開発モード）
+pip install -e .
+```
+
+インストール後、以下のコマンドが使用可能になります：
+```bash
+ikdd          # v0.2 コード生成コマンド
+ikdd-test     # v0.2 テスト実行コマンド
+```
+
+---
+
+### ⚡ v0.2を試す（推奨 - APIキー不要）
+
+**1️⃣ コード生成**
+
+```bash
+# ダミープロバイダー（APIキー不要）でコード生成
+ikdd runtime/v0_2/tool.yaml runtime/v0_2/knowledge.yaml
+```
+
+**出力:**
+```
+✅ Written: generated/csv_filter_exporter.py
+```
+
+**2️⃣ 生成されたコードを確認**
+
+```bash
+cat generated/csv_filter_exporter.py
+```
+
+**3️⃣ テスト実行**
+
+```bash
+# 統合テスト（コード生成、制約検証、実行テスト）
+cd runtime/v0_2
+python test_generated_code.py
+```
+
+**出力:**
+```
+✅ Test Results: 3/3 passed
+```
+
+**4️⃣ 生成されたコードを使う**
+
+```python
+from generated.csv_filter_exporter import csv_filter_exporter
+
+csv_filter_exporter(
+    csv_file="input.csv",
+    filter_column="score",
+    threshold=80,
+    json_file="result.json"
+)
+```
+
+**🔥 Anthropic APIを使う場合**
+
+```bash
+# APIキーを設定
+export ANTHROPIC_API_KEY='sk-ant-...'
+
+# Anthropicプロバイダーで実行
+ikdd runtime/v0_2/tool.yaml runtime/v0_2/knowledge.yaml --provider anthropic
+```
+
+---
+
+### 🔧 v0.1を試す（決定論的）
 
 ```bash
 cd runtime/v0.1
@@ -175,7 +259,7 @@ csv_filter_exporter(
     csv_file="input.csv",
     filter_column="score",
     threshold=80,
-    json_file="result.json",
+    json_file="result.json"
 )
 ```
 
