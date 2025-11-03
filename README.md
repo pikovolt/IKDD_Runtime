@@ -39,7 +39,7 @@ IKDD_Runtime/
 
 ## 📦 Runtime Versions
 
-### [v0.1 - Deterministic Runtime](runtime/v0.1/)
+### [v0.1 - Deterministic Runtime](runtime/v0_1/)
 **完全決定論的なコード生成システム**
 
 | 特徴 | 詳細 |
@@ -52,15 +52,15 @@ IKDD_Runtime/
 | **ステータス** | ✅ Stable |
 
 ```bash
-cd runtime/v0.1
+cd runtime/v0_1
 python -m ikdd.cli tool.yaml knowledge.yaml
 ```
 
-👉 [v0.1の詳細はこちら](runtime/v0.1/README.md)
+👉 [v0.1の詳細はこちら](runtime/v0_1/README.md)
 
 ---
 
-### [v0.2 - Hybrid Runtime](runtime/v0.2/)
+### [v0.2 - Hybrid Runtime](runtime/v0_2/)
 **決定論とAI推論のハイブリッドアプローチ**
 
 | 特徴 | 詳細 |
@@ -84,7 +84,7 @@ ikdd runtime/v0_2/tool.yaml runtime/v0_2/knowledge.yaml
 ikdd-test
 ```
 
-👉 [v0.2の詳細はこちら](runtime/v0.2/README.md)
+👉 [v0.2の詳細はこちら](runtime/v0_2/README.md)
 
 ---
 
@@ -160,8 +160,8 @@ knowledge:
 ## 📚 ドキュメント
 
 - [IKDD/CDD Concept](docs/CONCEPT_IKDD-CDD.md) - IKDD/CDDの概念と思想
-- [v0.1 Documentation](runtime/v0.1/README.md) - v0.1の詳細ドキュメント
-- [v0.2 Documentation](runtime/v0.2/README.md) - v0.2の設計・開発状況
+- [v0.1 Documentation](runtime/v0_1/README.md) - v0.1の詳細ドキュメント
+- [v0.2 Documentation](runtime/v0_2/README.md) - v0.2の設計・開発状況
 
 ---
 
@@ -247,7 +247,7 @@ ikdd runtime/v0_2/tool.yaml runtime/v0_2/knowledge.yaml --provider anthropic
 ### 🔧 v0.1を試す（決定論的）
 
 ```bash
-cd runtime/v0.1
+cd runtime/v0_1
 python -m ikdd.cli tool.yaml knowledge.yaml
 ```
 
