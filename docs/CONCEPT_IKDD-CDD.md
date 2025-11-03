@@ -143,7 +143,7 @@ flow:
 |----------|--------|--------------|
 | ✅ v0.1 — Deterministic Code Generator | Done | `flow + knowledge + codegen` による **決定論的なコード生成**（LLM 非依存 / snippet 貼り付け方式） |
 | ✅ v0.2 — Hybrid AI Codegen + CDD | Done | **WHY/WHAT（intent）× HOW（knowledge snippet）× CDD（制約）** → AI による実装生成。`must / forbidden / immutable` 制約チェック実装済み |
-| 🧪 Semantic Type（optional）+ Static Validation | Planned | 定義に意味の型を付与すると、意図とデータフローの整合性を検証し再現性を保証する |
+| 🧪 v0.3 — Semantic Type（optional）+ Static Validation | Planned | 定義に意味の型を付与すると、意図とデータフローの整合性を検証し再現性を保証する |
 | 🔁 v0.4 — Knowledge Versioning / Reuse | Future | snippet 改善 → 自動差分管理。**学習して育つ knowledge base** |
 | 🔄 v0.5 — Multi-Provider Enhancement | Future | より多くのLLMプロバイダー対応（OpenAI完全実装、Gemini、Claudeなど） |
 | 🌐 v1.0 — Full IKDD / CDD | Vision | 人間は **意図（WHY/WHAT）を書く** → AI が **実装（HOW）を生成**。Runtime が **逸脱を防ぐ** |
@@ -159,7 +159,7 @@ flow:
 |----------|------|
 | v0.1 | snippet を決定論的に貼り付けるだけ |
 | v0.2 | snippet は「ヒント」、AI が推論してコードを生成。CDD 制約チェック実装済み |
-| Semantic Type | 型による意図とデータフローの整合性検証 |
+| v0.3 | 型による意図とデータフローの整合性検証 |
 | v0.4 | knowledge が育つ / バージョン管理 |
 | v0.5 | より多くの LLM プロバイダー対応 |
 
