@@ -141,27 +141,27 @@ flow:
 
 | Version | Status | 内容（目的） |
 |----------|--------|--------------|
-| ✅ v0.1 — Deterministic Code Generator | Done | `flow + knowledge + codegen` による **決定論的なコード生成**（snippet を機械的に組み立てる） |
-| 🔜 v0.2 — Hybrid AI Codegen (IKDD / CDD 反映) | WIP | **intent (WHY/WHAT)** と **knowledge snippet (HOW)** を LLM に渡し、**制約された実装を AI 生成**する。*snippet は「完成コード」ではなく「実装ヒント / few-shot」になる* |
-| 🔧 v0.3 — Context Constraint DSL | Planned | CDD の完全実装：`must`, `forbidden`, `immutable`, `safe` を DSL として明示し、**AI の暴走（意味的ドリフト）を静的に防止** |
-| 🧪 v0.4 — Optional Type Validation | Optional | flow に型を付与できるようにし、**データフロー整合性チェック** を導入。ただし、型記述は任意（MVPでは必須にしない） |
-| 🔁 v0.5 — Knowledge Versioning / Registry | Future | knowledge snippet をバージョン管理し、自動差分 + 共有可能な **Knowledge Registry** を提供。knowledge を「育てられる」ようにする |
-| 🌐 v1.0 — Full IKDD / CDD | Vision | 人間は **意図（WHY/WHAT）を書く**だけ。AIが **実装（HOW）を生成**し、Runtime が **逸脱を防ぐ（CDD）**。コードは自動的に改善される世界。 |
+| ✅ v0.1 — Deterministic Code Generator | Done | `flow + knowledge + codegen` による **決定論的なコード生成**（LLM 非依存 / snippet 貼り付け方式） |
+| ✅ v0.2 — Hybrid AI Codegen + CDD | Done | **WHY/WHAT（intent）× HOW（knowledge snippet）× CDD（制約）** → AI による実装生成。`must / forbidden / immutable` 制約チェック実装済み |
+| 🧪 Semantic Type（optional）+ Static Validation | Planned | 定義に意味の型を付与すると、意図とデータフローの整合性を検証し再現性を保証する |
+| 🔁 v0.4 — Knowledge Versioning / Reuse | Future | snippet 改善 → 自動差分管理。**学習して育つ knowledge base** |
+| 🔄 v0.5 — Multi-Provider Enhancement | Future | より多くのLLMプロバイダー対応（OpenAI完全実装、Gemini、Claudeなど） |
+| 🌐 v1.0 — Full IKDD / CDD | Vision | 人間は **意図（WHY/WHAT）を書く** → AI が **実装（HOW）を生成**。Runtime が **逸脱を防ぐ** |
 
 ---
 
 ### IKDD Runtime の進化イメージ
 
-> **v0.1 は “テンプレート整形エンジン”**  
-> **v0.2 以降は “意図を実装に変換するエンジン”**
+> **v0.1 は "テンプレート整形エンジン"**
+> **v0.2 以降は "意図を実装に変換するエンジン"**
 
 | フェーズ | 役割 |
 |----------|------|
 | v0.1 | snippet を決定論的に貼り付けるだけ |
-| v0.2 | snippet は「ヒント」、AI が推論してコードを生成 |
-| v0.3 | CDD により AI の暴走を防ぐ |
-| v0.4 | 型チェックにより flow 破綻を防ぐ |
-| v0.5 | knowledge が育つ / 再利用される |
+| v0.2 | snippet は「ヒント」、AI が推論してコードを生成。CDD 制約チェック実装済み |
+| Semantic Type | 型による意図とデータフローの整合性検証 |
+| v0.4 | knowledge が育つ / バージョン管理 |
+| v0.5 | より多くの LLM プロバイダー対応 |
 
 ---
 
