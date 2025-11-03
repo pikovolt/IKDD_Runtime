@@ -55,7 +55,7 @@ def test_constraint_validation():
     """Test that generated code passes constraint checks."""
     print("\n🔄 Step 2: Testing constraint validation...")
 
-    from ikdd.constraints import run_checks
+    from runtime.v0_2.ikdd.constraints import run_checks
 
     with open("generated/csv_filter_exporter.py", "r", encoding="utf-8") as f:
         code = f.read()
