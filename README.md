@@ -189,10 +189,10 @@ knowledge:
 | --------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
 | ✅ **v0.1 — Deterministic Codegen**       | Done     | `flow + knowledge + codegen` による **決定論的なコード生成**（LLM 非依存 / snippet 貼り付け方式）                                          |
 | ✅ **v0.2 — Hybrid AI Codegen + CDD**       | Done     | **WHY/WHAT（intent）× HOW（knowledge snippet）× CDD（制約）** → AI による実装生成。`must / forbidden / immutable` 制約チェック実装済み |
-| 🚧 **v0.3 — Intent-State Architecture + Static Validation** | In Progress | 意図を構造化（IEP）し、state/constraintにより再現性を保証。MVP実装完了、本格実装は継続中 |
-| 🔁 **v0.4 — Knowledge Versioning / Reuse**    | Future   | snippet 改善 → 自動差分管理。**学習して育つ knowledge base**                                                                      |
-| 🔄 **v0.5 — Multi-Provider Enhancement**    | Future   | より多くのLLMプロバイダー対応（OpenAI完全実装、Gemini、Claudeなど）                                                                      |
-| 🌐 **v1.0 — Full IKDD / CDD**                 | Vision   | 人間は **意図（WHY/WHAT）を書く** → AI が **実装（HOW）を生成**。Runtime が **逸脱を防ぐ**                                                  |
+| 🚧 **v0.3 — Intent-State Architecture**    | In Progress | 意図構造（state, constraint）の確立。IEP形式でWHY/WHATを構造化し、LLM非依存Runtimeを実現。MVP実装完了 |
+| 🔮 **v0.4 — LLM Integration for Intent Expansion** | Future | LLM統合による意図展開。構造的補完・安全な自動化を実現 |
+| 🗄️ **v0.5 — Intent Repository & Reuse**    | Future   | 意図リポジトリ／再利用。"知識としての設計"への展開 |
+| 🌐 **v1.0 — IDE Integration (Intent Design Environment)** | Vision | IDE統合環境。人間は **意図（WHY/WHAT）を書く** → Runtime が **逸脱を防ぎながら実行** |
 
 ---
 
