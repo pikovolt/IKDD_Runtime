@@ -1,0 +1,140 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$title: "IKDD v0.3.2-min Intent Execution Plan Schema"
+$description: >
+  IKDD v0.3 Intent Engine における Intent Execution Plan (IEP) の最小実行系仕様。
+  WHY/WHAT の意図を HOW への参照構造（state/transition）として形式化し、
+  v0.2 実装層に片方向射影できる構造を定義する。
+
+type: object
+required: [id, states, constraints]
+properties:
+  id:
+    type: string
+    description: "IEP 全体の識別子"
+
+  metadata:
+    type: object
+    description: "バージョンや作成者、タイムスタンプなどのメタ情報"
+    properties:
+      version: { type: string, default: "0.3.2-min" }
+      author: { type: string }
+      created_at: { type: string, format: date-time }
+
+  states:
+    type: array
+    description: "各 state 定義。state は entry/exit のみで動作を表す。"
+    items:
+      type: object
+      required: [id, kind]
+      properties:
+        id:
+          type: string
+          description: "state 識別子"
+        kind:
+          type: string
+          enum: [internal, semi-external, external]
+          description: "state の再現性クラス"
+        data_contract:
+          type: object
+          description: "state が受け取る/出力するデータの契約仕様（型・形状・制約）"
+        entry_action:
+          type: array
+          description: "state 進入時に実行される参照 step 群"
+          items:
+            type: object
+            required: [ref_step]
+            properties:
+              ref_step:
+                type: string
+                description: "v0.2 step 名を参照するキー（HOW 本文は禁止）"
+              args:
+                type: object
+                description: "引数定義（テンプレート式可）"
+        exit_action:
+          type: array
+          description: "state 退出時に実行される参照 step 群"
+          items:
+            type: object
+            required: [ref_step]
+            properties:
+              ref_step:
+                type: string
+                description: "v0.2 step 名を参照するキー（HOW 本文は禁止）"
+              args:
+                type: object
+                description: "引数定義（テンプレート式可）"
+
+  transitions:
+    type: array
+    description: "state 間の遷移定義"
+    items:
+      type: object
+      required: [from, to]
+      properties:
+        from: { type: string }
+        to: { type: string }
+        guard:
+          type: string
+          description: "自然言語＋検証式（dryrun 時にチェック）"
+        effects:
+          type: array
+          description: "遷移時に発動する参照 step 群"
+          items:
+            type: object
+            required: [ref_step]
+            properties:
+              ref_step:
+                type: string
+                description: "v0.2 step 名参照キー"
+              args:
+                type: object
+                description: "引数定義（テンプレート式可）"
+
+  constraints:
+    type: object
+    description: "Appendix C に基づく実行制約群。Runtime にて強制される。"
+    properties:
+      must:
+        type: array
+        description: "必須 step 群。存在しなければコンパイル不成立。"
+        items: { type: string }
+      forbidden:
+        type: array
+        description: "禁止モジュール/step 群。発見時にコンパイル失敗。"
+        items: { type: string }
+      keep:
+        type: array
+        description: "v0.2 射影時にメタとして保持するキー群。"
+        items: { type: string }
+      error:
+        type: array
+        description: "実行中に該当すれば fail-fast。"
+        items: { type: string }
+
+  runtime:
+    type: object
+    description: "実行時（MVP Runtime）用の補助設定"
+    properties:
+      contract_checks:
+        type: object
+        description: "実行前後の事前・事後条件"
+        properties:
+          pre:
+            type: array
+            description: "実行前に検証する自然言語 or 式"
+            items: { type: string }
+          post:
+            type: array
+            description: "実行後に検証する自然言語 or 式"
+            items: { type: string }
+      logging:
+        type: object
+        description: "ログ関連設定（任意）"
+        properties:
+          level:
+            type: string
+            enum: [none, minimal, verbose]
+            default: minimal
+          include_io_hash: { type: boolean, default: true }
+
+additionalProperties: false

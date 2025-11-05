@@ -1,0 +1,6 @@
+# build / runtime outputs
+examples/*.tool.yaml
+examples/*.json
+examples/*.log
+__pycache__/
+*.pyc
