@@ -1,0 +1,31 @@
+id: csv_filter_job
+metadata:
+  name: csv_filter_exporter
+  version: "0.3.2-min"
+states:
+  - id: loaded
+    kind: internal
+    entry_action:
+      - ref_step: CSV_LOAD
+        args: { csv_file: "${inputs.csv_file}" }
+  - id: filtered
+    kind: internal
+    entry_action:
+      - ref_step: FILTER_ROWS
+        args: { column: "${cfg.col}", op: ">", threshold: "${cfg.th}" }
+transitions:
+  - from: loaded
+    to: filtered
+    guard: "rows schema matches cfg.expected_schema"
+    effects:
+      - ref_step: JSON_EXPORT
+        args: { path: "export.json" }
+constraints:
+  must: [CSV_LOAD, FILTER_ROWS, JSON_EXPORT]
+  forbidden: [pandas]
+  keep: [filter_column, threshold]
+  error: ["output is empty AND cfg.fail_on_empty == true"]
+runtime:
+  contract_checks:
+    pre:  ["inputs.csv_file exists"]
+    post: ["export.json exists"]
