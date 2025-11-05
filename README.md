@@ -27,7 +27,8 @@
 IKDD_Runtime/
   ├─ runtime/
   │   ├─ v0.1/             ← Deterministic Runtime (Stable)
-  │   └─ v0.2/             ← Hybrid Runtime (In Development)
+  │   ├─ v0.2/             ← Hybrid Runtime (Ready to Use)
+  │   └─ v0.3/             ← Intent-State Architecture (Experimental - MVP)
   ├─ docs/
   │   └─ CONCEPT_IKDD-CDD.md
   ├─ examples/
@@ -85,6 +86,44 @@ ikdd-test
 ```
 
 👉 [v0.2の詳細はこちら](runtime/v0_2/README.md)
+
+---
+
+### [v0.3 - Intent-State Runtime](runtime/v0_3/)
+**AIなしで意図が動く構造化Runtime（実験的実装）**
+
+| 特徴 | 詳細 |
+|------|------|
+| **アプローチ** | WHY/WHATを構造化（IEP: Intent Execution Plan） |
+| **AI推論** | なし（意図の構造化に集中） |
+| **再現性** | State-based + constraint enforcement |
+| **実行単位** | State遷移（entry_action + transition） |
+| **制約検証** | must/forbidden/keep/error の静的検証を実装 |
+| **適用範囲** | 意図の構造化、再現性が重要な処理（PoC段階） |
+| **ステータス** | 🧪 Experimental (MVP) |
+
+```bash
+cd runtime/v0_3
+
+# スキーマ検証
+python3 validator/dryrun_validator.py examples/ex1_minimal.iep.yaml
+
+# v0.2への変換
+python3 compiler/iep_to_v02.py examples/ex1_minimal.iep.yaml out.yaml
+
+# Runtime実行
+python3 runtime/runtime_engine.py examples/ex1_minimal.iep.yaml
+```
+
+👉 [v0.3の詳細はこちら](runtime/v0_3/README.md)
+
+**v0.3の特徴:**
+- **Intent Execution Plan (IEP)**: WHY/WHATをstate/constraintとして構造化
+- **v0.2互換コンパイラ**: IEPをv0.2のstep flowに変換可能
+- **Contract検証**: pre/post条件による実行時安全性保証
+- **AI非依存**: LLMなしで意図構造を実行・検証
+
+**⚠️ 注意**: v0.3は現在MVP（Minimum Viable Product）段階です。基本機能は実装されていますが、本番利用には更なる開発が必要です。
 
 ---
 
@@ -150,7 +189,7 @@ knowledge:
 | --------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
 | ✅ **v0.1 — Deterministic Codegen**       | Done     | `flow + knowledge + codegen` による **決定論的なコード生成**（LLM 非依存 / snippet 貼り付け方式）                                          |
 | ✅ **v0.2 — Hybrid AI Codegen + CDD**       | Done     | **WHY/WHAT（intent）× HOW（knowledge snippet）× CDD（制約）** → AI による実装生成。`must / forbidden / immutable` 制約チェック実装済み |
-| 🧪 **v0.3 — Semantic Type（optional） + Static Validation** | Planned | 定義に意味の型を付与すると、意図とデータフローの整合性を検証し再現性を保証する                                                            |
+| 🚧 **v0.3 — Intent-State Architecture + Static Validation** | In Progress | 意図を構造化（IEP）し、state/constraintにより再現性を保証。MVP実装完了、本格実装は継続中 |
 | 🔁 **v0.4 — Knowledge Versioning / Reuse**    | Future   | snippet 改善 → 自動差分管理。**学習して育つ knowledge base**                                                                      |
 | 🔄 **v0.5 — Multi-Provider Enhancement**    | Future   | より多くのLLMプロバイダー対応（OpenAI完全実装、Gemini、Claudeなど）                                                                      |
 | 🌐 **v1.0 — Full IKDD / CDD**                 | Vision   | 人間は **意図（WHY/WHAT）を書く** → AI が **実装（HOW）を生成**。Runtime が **逸脱を防ぐ**                                                  |
@@ -159,11 +198,19 @@ knowledge:
 
 ## 📚 ドキュメント
 
+### 📖 コンセプト・理念
 - [IKDD/CDD Concept](docs/CONCEPT_IKDD-CDD.md) - IKDD/CDDの概念と思想
+- [IKDD Core Policy](docs/IKDD_CORE_POLICY.md) - IKDDの根源的理念と基本原則
+- [IKDD Tool Principles](docs/IKDD_TOOL_PRINCIPLES.md) - 知識の道具化とRuntime設計原則
 - [Why Definition-First?](docs/WHY_DEFINITION_FIRST.md) - なぜIKDDは「定義を先に書く」のか
-- [IKDD（Instrumental Knowledge Driven Development）— Manual](docs/IKDD_Manual-IntentFixed_Template_v1.0.md) - 手動IKDDの説明
+
+### 📝 非Runtimeドキュメント
+- [IKDD Manual](docs/IKDD_Manual-IntentFixed_Template_v1.0.md) - 手動IKDD（Intent-fixed / no guessing）の実践方法
+
+### 🔧 Runtime別ドキュメント
 - [v0.1 Documentation](runtime/v0_1/README.md) - v0.1の詳細ドキュメント
 - [v0.2 Documentation](runtime/v0_2/README.md) - v0.2の設計・開発状況
+- [v0.3 Documentation](runtime/v0_3/README.md) - v0.3のアーキテクチャと実行方法（MVP）
 
 ---
 
