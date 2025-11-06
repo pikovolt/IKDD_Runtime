@@ -4,49 +4,49 @@
 
 ```mermaid
 flowchart LR
-    subgraph Client["Client / Tools"]
+    subgraph Client
         I[Intents]
         DSpec[Done Conditions]
-        Ksnip[External Knowledge Packages]
+        Ksnip[Knowledge Packages]
     end
 
-    subgraph Kernel["Intent OS Kernel"]
+    subgraph Kernel
         DIR[Intent Registry]
-        DNR[Done/State Rules Registry]
+        DNR[Done / State Rules]
         KREG[Knowledge Registry]
         PLAN[Planner]
-        EXEC[Executor Orchestrator]
-        OBS[Telemetry / Logs]
-        STORE[State Store (Before/After)]
-        POL[Policy & Capability Resolver]
+        EXEC[Executor]
+        OBS[Logs / Telemetry]
+        STORE[State Store Before/After]
+        POL[Capability / Policy Resolver]
     end
 
-    subgraph Runtime["Runtime Adapters"]
-        WS[World-State Adapters]
-        DRV[Domain Drivers (DCC/DB/FS/HTTP/...)]
-        EXE[Executors (Codegen/Script/Workflow)]
-        VAL[Validators & Asserters]
+    subgraph Runtime
+        WS[World-State Adapter]
+        DRV[Domain Drivers]
+        EXE[Executors: code/script/workflow]
+        VAL[Validator / Asserter]
     end
 
-    I -->|register/submit| DIR
-    DSpec -->|register| DNR
-    Ksnip -->|publish| KREG
+    I --> DIR
+    DSpec --> DNR
+    Ksnip --> KREG
 
     DIR --> PLAN
     DNR --> PLAN
     KREG --> PLAN
-    PLAN -->|execution plan| EXEC
 
-    EXEC -->|select/compose HOW| EXE
-    EXEC -->|capability check| POL
+    PLAN --> EXEC
+
+    EXEC --> EXE
+    EXEC --> POL
     POL --> KREG
 
-    WS <-->|read/write| STORE
-    EXEC -->|mutate/query| WS
-    EXE -->|use| DRV
+    EXEC --> WS
+    WS --> STORE
 
     EXEC --> VAL
-    VAL -->|DONE?| DNR
+    VAL --> DNR
 
     STORE --> OBS
     PLAN --> OBS
