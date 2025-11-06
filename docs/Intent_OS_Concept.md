@@ -93,6 +93,53 @@ Intent OS は **意図を保持し実装に依存しない**。
 
 ---
 
+## 9. 解決する問題（Problem Statement）
+
+従来の自動化やコード生成では：
+
+* Intent（目的）が実装に埋没しやすい
+* 実装が腐ると Intent が失われる
+* 実装変更が Intent を書き換えてしまう（逆依存）
+
+Intent OS は、Intent と HOW の責務を分離する：
+
+| レイヤ                    | 本質       | 状態         |
+| ---------------------- | -------- | ---------- |
+| **Intent（WHAT / WHY）** | 永続する本体   | バージョン管理対象  |
+| **実装（HOW）**            | 捨てられる副産物 | いつでも差し替え可能 |
+
+Intent が **実装より上位になる**。
+
+---
+
+## 10. 入出力（I/O Model）
+
+```
+Input  = Intent + Done + WorldState(before) + Knowledge
+Output = 実装（code / process） + WorldState(after)
+```
+
+---
+
+## 11. 関連概念との差異（Difference from Related Concepts）
+
+Intent OS が対象とする「Intent（目的）」は **永続的な概念の本体** であり、
+生成される実装は **副産物として捨てられる／交換できる** 点に特徴がある。
+
+| 手法/概念                                                      | 共通点                  | Intent OS の独自性                                              |
+| ---------------------------------------------------------- | -------------------- | ----------------------------------------------------------- |
+| **Declarative / Infrastructure as Code (Terraform / Nix)** | 状態を宣言し、差分で適用         | Intent（WHY）が無い。Intent の差分（Intent diff）が存在しない。実装は副産物ではなく成果物。 |
+| **AI Planning / GOAP / PDDL**                              | WHAT を出発点に HOW を生成する | Intent は一時的な入力であり、**永続されない**。実装を保持しない。Intent diff がない。      |
+| **Model Driven Development (MDD / Codegen)**               | 定義を元に自動生成する          | WHATではなく **構造モデル** が中心。生成物（コード）が成果物で、Intentは上位に存在しない。       |
+| **CI/CD / DevOps automation**                              | 実装を自動化する             | Intent（目的）を扱わない。Done条件が無い。                                  |
+
+Intent OS の本質：
+
+> Intent（WHAT/WHY） が永続し、
+> 実装（HOW）は **副産物 / 交換可能 / 破棄可能** である。
+
+---
+
 ## 最終的な一文の定義（Short Definition）
 
 > **Intent OS は、意図を最上位の実行単位として扱い、
