@@ -301,6 +301,52 @@ Intent 変更指示:
   - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
 ```
 
+### 5.2 差分 IKDD のバージョン管理
+
+**重要**: Intent と変更依頼は**セットで Git 管理**する。
+
+#### 推奨ファイル構成
+
+```
+intents/
+  create_parent_null_v1.md              # Intent 本体（v1）
+  change_v1_to_v2.md                    # 変更依頼（なぜ・何を変更するか）
+  create_parent_null_v2.md              # 変更後の Intent 本体（v2）
+```
+
+#### 運用フロー
+
+```
+1. 変更依頼ファイルを作成
+   → intents/change_v1_to_v2.md
+   → 追加・削除・変更の指示と変更理由を記述
+
+2. AI に Intent diff を生成させる
+   → unified diff 形式で出力
+
+3. 変更後の Intent ファイルを作成
+   → intents/create_parent_null_v2.md
+
+4. Git commit
+   → 変更依頼ファイル + 新 Intent をコミット
+   → コミットメッセージに変更サマリ
+
+5. 実装コードは Intent から再生成
+   → v2 の Intent を使って実装を生成
+```
+
+#### この運用が必要な理由
+
+| 問題                     | 解決                              |
+| ---------------------- | ------------------------------- |
+| 仕様変更の理由が失われる           | 変更依頼ファイルが履歴に残る                  |
+| 「なぜこの仕様になったか」が不明       | 変更依頼に背景・理由が明記されている              |
+| 実装コードだけでは Intent が復元不可能 | Intent ファイルから何度でも実装を再生成可能       |
+| コミットメッセージだけでは情報不足      | 変更依頼ファイルに構造化された詳細な変更指示が残る       |
+| Intent の進化が追跡できない       | v1 → v2 → v3 という仕様の変遷が Git で見える |
+
+**結論**: 実装コードは Git で追跡しない。Intent と変更依頼だけを Git 管理する。
+
 ---
 
 ## 6. IKDD が必要な理由（Before / After 分析）
