@@ -300,6 +300,70 @@ Intent 変更指示:
   - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
   - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
 ```
+目的 (WHAT):
+  選択されているモデルの親として Null を挿入する。
+
+理由 (WHY):
+  階層をまとめて管理しやすくするため。
+
+完了条件 (DONE):
+  - Null が作成されている                     → assert createdNull is not None
+  - Null が親になっている                      → assert model.Parent == createdNull
+  - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+  - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
+```
+
+**Intent 変更指示**
+
+```
+追加:
+  - 完了条件: Null の名前にプレフィックス "Group_" が含まれる
+              → assert createdNull.Name.startswith("Group_")
+
+変更:
+  - 目的 (WHAT):
+      選択されているモデルの親として Null を挿入する。
+    → 選択されているモデルの親として命名規則に従った Null を挿入する。
+
+変更理由:
+  複数のグループ化 Null を区別しやすくするため、明示的な命名規則を導入する。
+```
+
+**出力（Intent diff）**
+
+```diff
+--- Intent_create_parent_null_v1.md
++++ Intent_create_parent_null_v2.md
+@@ -1,5 +1,5 @@
+ 目的 (WHAT):
+-  選択されているモデルの親として Null を挿入する。
++  選択されているモデルの親として命名規則に従った Null を挿入する。
+
+ 理由 (WHY):
+   階層をまとめて管理しやすくするため。
+@@ -9,3 +9,4 @@
+   - Null が親になっている                      → assert model.Parent == createdNull
+   - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+   - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
++  - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
+```
+
+**変更後の Intent（確認用）**
+
+```
+目的 (WHAT):
+  選択されているモデルの親として命名規則に従った Null を挿入する。
+
+理由 (WHY):
+  階層をまとめて管理しやすくするため。
+
+完了条件 (DONE):
+  - Null が作成されている                     → assert createdNull is not None
+  - Null が親になっている                      → assert model.Parent == createdNull
+  - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+  - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
+  - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
+```
 
 ### 5.2 差分 IKDD のバージョン管理
 
