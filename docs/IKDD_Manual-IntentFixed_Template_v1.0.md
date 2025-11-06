@@ -300,6 +300,116 @@ Intent 変更指示:
   - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
   - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
 ```
+目的 (WHAT):
+  選択されているモデルの親として Null を挿入する。
+
+理由 (WHY):
+  階層をまとめて管理しやすくするため。
+
+完了条件 (DONE):
+  - Null が作成されている                     → assert createdNull is not None
+  - Null が親になっている                      → assert model.Parent == createdNull
+  - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+  - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
+```
+
+**Intent 変更指示**
+
+```
+追加:
+  - 完了条件: Null の名前にプレフィックス "Group_" が含まれる
+              → assert createdNull.Name.startswith("Group_")
+
+変更:
+  - 目的 (WHAT):
+      選択されているモデルの親として Null を挿入する。
+    → 選択されているモデルの親として命名規則に従った Null を挿入する。
+
+変更理由:
+  複数のグループ化 Null を区別しやすくするため、明示的な命名規則を導入する。
+```
+
+**出力（Intent diff）**
+
+```diff
+--- Intent_create_parent_null_v1.md
++++ Intent_create_parent_null_v2.md
+@@ -1,5 +1,5 @@
+ 目的 (WHAT):
+-  選択されているモデルの親として Null を挿入する。
++  選択されているモデルの親として命名規則に従った Null を挿入する。
+
+ 理由 (WHY):
+   階層をまとめて管理しやすくするため。
+@@ -9,3 +9,4 @@
+   - Null が親になっている                      → assert model.Parent == createdNull
+   - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+   - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
++  - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
+```
+
+**変更後の Intent（確認用）**
+
+```
+目的 (WHAT):
+  選択されているモデルの親として命名規則に従った Null を挿入する。
+
+理由 (WHY):
+  階層をまとめて管理しやすくするため。
+
+完了条件 (DONE):
+  - Null が作成されている                     → assert createdNull is not None
+  - Null が親になっている                      → assert model.Parent == createdNull
+  - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+  - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
+  - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
+```
+
+### 5.2 差分 IKDD のバージョン管理
+
+**重要**: Intent と変更依頼は**セットで Git 管理**する。
+
+#### 推奨ファイル構成
+
+```
+intents/
+  create_parent_null_v1.md              # Intent 本体（v1）
+  change_v1_to_v2.md                    # 変更依頼（なぜ・何を変更するか）
+  create_parent_null_v2.md              # 変更後の Intent 本体（v2）
+```
+
+#### 運用フロー
+
+```
+1. 変更依頼ファイルを作成
+   → intents/change_v1_to_v2.md
+   → 追加・削除・変更の指示と変更理由を記述
+
+2. AI に Intent diff を生成させる
+   → unified diff 形式で出力
+
+3. 変更後の Intent ファイルを作成
+   → intents/create_parent_null_v2.md
+
+4. Git commit
+   → 変更依頼ファイル + 新 Intent をコミット
+   → コミットメッセージに変更サマリ
+
+5. 実装コードは Intent から再生成
+   → v2 の Intent を使って実装を生成
+```
+
+#### この運用が必要な理由
+
+| 問題                     | 解決                              |
+| ---------------------- | ------------------------------- |
+| 仕様変更の理由が失われる           | 変更依頼ファイルが履歴に残る                  |
+| 「なぜこの仕様になったか」が不明       | 変更依頼に背景・理由が明記されている              |
+| 実装コードだけでは Intent が復元不可能 | Intent ファイルから何度でも実装を再生成可能       |
+| コミットメッセージだけでは情報不足      | 変更依頼ファイルに構造化された詳細な変更指示が残る       |
+| Intent の進化が追跡できない       | v1 → v2 → v3 という仕様の変遷が Git で見える |
+
+**結論**: 実装コードは Git で追跡しない。Intent と変更依頼だけを Git 管理する。
 
 ---
 
