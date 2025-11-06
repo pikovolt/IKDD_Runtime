@@ -206,6 +206,7 @@ knowledge:
 
 ### 📝 非Runtimeドキュメント
 - [IKDD Manual](docs/IKDD_Manual-IntentFixed_Template_v1.0.md) - 手動IKDD（Intent-fixed / no guessing）の実践方法
+- [IKDD Live Coding](docs/IKDD_Live_Coding.md) - 初心者でも理解できるステップ説明付きアウトライン
 
 ### 🔧 Runtime別ドキュメント
 - [v0.1 Documentation](runtime/v0_1/README.md) - v0.1の詳細ドキュメント
