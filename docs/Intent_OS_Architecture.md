@@ -160,3 +160,7 @@ graph TB
 * `StateStore.snapshot(tag)/diff(a,b)/replay(tag)`
 
 ---
+
+⚠️ 本ドキュメントは、Intent OS の初期段階の概念設計です。
+構成・実装は今後変更される可能性があります。
+本仕様は「現時点の理解（current understanding）」を共有するためのものです。
