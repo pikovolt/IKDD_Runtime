@@ -204,20 +204,101 @@ def create_parent_null(models):
 
 ---
 
-## 5. 差分 IKDD（既存コードの変更依頼）
+## 5. 差分 IKDD（既存 Intent の変更依頼）
+
+**思想**: 実装コードは AI が生成するたびに変わる。変更管理すべきは **Intent（仕様）** のみ。
 
 ```
-推測禁止。Intent は変えない。
-変更が必要な箇所のみ修正する。
+推測禁止。Intent の差分のみを指示する。
+実装コードは生成しない。
 
-現状:
-問題:
-変更内容:
-変更箇所:
-保持 (keep):
+元の Intent:
+  [変更対象の Intent を明示、またはファイルパス参照]
 
-出力:
-  - unified diff (.patch) 形式（git apply で適用）
+Intent 変更指示:
+  追加:
+    - [新しく追加する要件・制約]
+  削除:
+    - [削除する要件・制約]
+  変更:
+    - [変更前] → [変更後]
+
+変更理由:
+  [なぜこの Intent 変更が必要か]
+
+出力形式:
+  - Intent diff（unified diff 形式）
+  - 変更後の Intent 全体（確認用、オプション）
+```
+
+### 5.1 差分 IKDD 実例
+
+**元の Intent（セクション4.1の Intent）**
+
+```
+目的 (WHAT):
+  選択されているモデルの親として Null を挿入する。
+
+理由 (WHY):
+  階層をまとめて管理しやすくするため。
+
+完了条件 (DONE):
+  - Null が作成されている                     → assert createdNull is not None
+  - Null が親になっている                      → assert model.Parent == createdNull
+  - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+  - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
+```
+
+**Intent 変更指示**
+
+```
+追加:
+  - 完了条件: Null の名前にプレフィックス "Group_" が含まれる
+              → assert createdNull.Name.startswith("Group_")
+
+変更:
+  - 目的 (WHAT):
+      選択されているモデルの親として Null を挿入する。
+    → 選択されているモデルの親として命名規則に従った Null を挿入する。
+
+変更理由:
+  複数のグループ化 Null を区別しやすくするため、明示的な命名規則を導入する。
+```
+
+**出力（Intent diff）**
+
+```diff
+--- Intent_create_parent_null_v1.md
++++ Intent_create_parent_null_v2.md
+@@ -1,5 +1,5 @@
+ 目的 (WHAT):
+-  選択されているモデルの親として Null を挿入する。
++  選択されているモデルの親として命名規則に従った Null を挿入する。
+
+ 理由 (WHY):
+   階層をまとめて管理しやすくするため。
+@@ -9,3 +9,4 @@
+   - Null が親になっている                      → assert model.Parent == createdNull
+   - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+   - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
++  - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
+```
+
+**変更後の Intent（確認用）**
+
+```
+目的 (WHAT):
+  選択されているモデルの親として命名規則に従った Null を挿入する。
+
+理由 (WHY):
+  階層をまとめて管理しやすくするため。
+
+完了条件 (DONE):
+  - Null が作成されている                     → assert createdNull is not None
+  - Null が親になっている                      → assert model.Parent == createdNull
+  - Transform が変わっていない（±0.0001）     → assert almostEqual(before, after, 0.0001)
+  - エラー発生時 Scene 差分 = 0               → assert scene_before == scene_after
+  - Null の名前にプレフィックス "Group_" が含まれる → assert createdNull.Name.startswith("Group_")
 ```
 
 ---
