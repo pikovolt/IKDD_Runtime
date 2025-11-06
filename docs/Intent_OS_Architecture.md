@@ -59,36 +59,36 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
-    participant Client
-    participant Kernel
-    participant Planner
-    participant Executor
-    participant World as World-State Adapter
-    participant Validator as Validator/Asserter
-    participant Store as State Store
+    participant Client as Client
+    participant Kernel as Kernel
+    participant Planner as Planner
+    participant Executor as Executor
+    participant World as World-State
+    participant Validator as Validator
+    participant Store as StateStore
 
-    Client->>Kernel: Submit(Intent, Done)
-    Kernel->>Store: Snapshot(Before)
+    Client->>Kernel: Submit(Intent + Done)
+    Kernel->>Store: Snapshot(before)
     Kernel->>Planner: BuildPlan(Intent, Done, Knowledge)
 
-    loop until DONE
-        Planner-->>Executor: ExecutionPlan(HOW candidates)
-        Executor->>World: Apply(Operation)
-        World-->>Executor: Effects
-        Executor->>Validator: Evaluate(Done, Store.Before, World.Current)
-        Validator-->>Kernel: Result(pass/fail + deltas)
+    loop execution cycle
+        Planner->>Executor: Create execution segment (HOW)
 
-        alt pass == true
-            Kernel->>Store: Snapshot(After)
-            Kernel-->>Client: Success(Proof: Before/After, Logs)
-            break
-        else fail == true & recoverable
-            Kernel->>Planner: RefinePlan(ctx, failures, capabilities)
-            note right of Planner: swap/compose HOW<br/>add knowledge / downgrade
-        else terminal failure
-            Kernel-->>Client: Fail(Trace, Artifacts)
-            break
-        end
+        Executor->>World: Apply operation
+        World-->>Executor: Effect / result
+
+        Executor->>Validator: Validate(before, after, Done)
+        Validator-->>Kernel: pass / fail / error
+    end
+
+    alt DONE == pass
+        Kernel->>Store: Snapshot(after)
+        Kernel-->>Client: Success (Done satisfied)
+    else FAIL (retryable)
+        Kernel->>Planner: Refine plan (try next HOW)
+        note over Kernel,Planner: Planner selects alternative
+    else FAIL (terminal)
+        Kernel-->>Client: Fail (no more valid HOW)
     end
 ```
 
