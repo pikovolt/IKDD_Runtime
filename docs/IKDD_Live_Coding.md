@@ -30,7 +30,7 @@ LiveCoding を開始する前に、コードファイルの先頭に以下を書
 
 ```python
 /// IKDD Live
-# Intent / Done / Constraints / few-shot を使用する
+# Intent / Done / HOW / few-shot を使用する
 # このファイルは IKDD のルールに従います
 ```
 
@@ -47,7 +47,7 @@ LiveCoding を開始する前に、コードファイルの先頭に以下を書
 /// IKDD Live
 # IKDD Protocol
 # - Intent（WHAT / WHY / DONE）
-# - Constraints（must / forbidden / keep / error）
+# - HOW（must / forbidden / keep / error）
 # - Implementation-IO
 # - 推測禁止：HOW を書かない
 
@@ -58,7 +58,7 @@ LiveCoding を開始する前に、コードファイルの先頭に以下を書
 Done:
 - Before.WorldTransform == After.WorldTransform
 
-Constraints:
+HOW:
   keep:
     - Before.WorldTransform == After.WorldTransform
   forbidden:
@@ -93,7 +93,7 @@ Constraints:
    ↓
 4. Snippet（展開して速く書く）
    ↓
-5. Constraints（必要な時にだけ追加）
+5. HOW（必要な時にだけ追加）
    ↓
 6. トリガー（/// IKDD Live）
 ```
@@ -307,17 +307,17 @@ Intent の型を毎回自分で思い出す必要がない。
 
 # ◆ STEP 5：困ったときだけ制約を追加する（強化版）
 
-### ✅ 新しく覚える言葉：**Constraints（＝やってほしい／やってほしくないを宣言）**
+### ✅ 新しく覚える言葉：**HOW（＝やってほしい／やってほしくないを宣言）**
 
-Copilot / ChatGPT が **意図を守らず、変な HOW を生み始めたときにだけ使う**
+Copilot / ChatGPT が **意図を守らず、変な実装を生み始めたときにだけ使う**
 ＝ **必要に応じて追加する制約**。
 
 ---
 
-### ▼ Constraints の使い方（例）
+### ▼ HOW の使い方（例）
 
 ```
-Constraints:
+HOW:
   forbidden:
     - 選択中以外のオブジェクトを変更する
     - 自動で命名規則を変える
@@ -331,7 +331,7 @@ Constraints:
 
 ---
 
-### ✅ Constraints の要素説明（付加）
+### ✅ HOW の要素説明（付加）
 
 ```
 must       …… 必ず守ってほしい最低限の条件
@@ -344,13 +344,13 @@ error      …… 条件に違反したら処理を止めてよい（assert / ra
 
 ### ✅ 重要なポイント
 
-| Constraints とは？      | Constraints ではない |
+| HOW とは？      | HOW ではない |
 | -------------------- | ---------------- |
 | 「境界線・禁止範囲・最低限守るべき約束」 | 「実装方法」や「手順」      |
-| WHAT を守るためのルール       | HOW を指示するもの      |
-| LLM の暴走を防ぐ           | LLM に HOW を押し付ける |
+| WHAT を守るためのルール       | 実装方法を指示するもの      |
+| LLM の暴走を防ぐ           | LLM に実装を押し付ける |
 
-> **Constraints は、"HOW を固定するためではなく、意図を壊さないためにある"。**
+> **HOW は、"実装方法を固定するためではなく、意図を壊さないためにある"。**
 
 ---
 
@@ -411,7 +411,7 @@ IKDD が **常時有効になってしまうと、普段の補完が邪魔にな
 | STEP2 | Done（結果）        | WHAT を状態で表現する             |
 | STEP3 | few-shot（例）     | HOW のスタイルを伝える             |
 | STEP4 | Snippet         | 作業を速くする                   |
-| STEP5 | Constraints（制約） | 必要になったら制約を追加              |
+| STEP5 | HOW（制約） | 必要になったら制約を追加              |
 | STEP6 | トリガー            | 暴発防止（使うときだけ発動）            |
 
 ---
