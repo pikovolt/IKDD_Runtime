@@ -2,6 +2,104 @@
 
 ---
 
+# ◆ STEP 0：VSCode Copilot に IKDD を理解させる（重要）
+
+### ✅ Copilot は IKDD のルールを知らない
+
+> Copilot は IKDD のルールを知らない状態で動作します。
+> そのため、まず最初に **IntentFixed Template**（IKDD のルール）を読み込ませる必要があります。
+
+---
+
+### 🔹 **手順 1：Copilot に IKDD ルールを読み込ませる**
+
+1. VSCode で `docs/IKDD_Manual-IntentFixed_Template_v1.0.md` を開く
+2. Copilot チャット（`Ctrl+Shift+I` / `Cmd+Shift+I`）を開く
+3. 次のメッセージを送信する：
+
+```
+このファイルは IKDD のルール（Intent固定）です。
+理解してください。回答は不要です。
+```
+
+---
+
+### 🔹 **手順 2：コードファイルに IKDD モードのトリガーを書く**
+
+LiveCoding を開始する前に、コードファイルの先頭に以下を書いておきます：
+
+```python
+/// IKDD Live
+# Intent / Done / Constraints / few-shot を使用する
+# このファイルは IKDD のルールに従います
+```
+
+→ これが **Copilot の文脈セット（Context Priming）**
+→ つまり **「IKDD を ON にする」** トリガー
+
+---
+
+### 🔹 **Copilot 向けサンプルコード（テンプレート）**
+
+以下が、Copilot が **HOW を推測するのではなく、Intent に従って実装** する形式です：
+
+```python
+/// IKDD Live
+# IKDD Protocol
+# - Intent（WHAT / WHY / DONE）
+# - Constraints（must / forbidden / keep / error）
+# - Implementation-IO
+# - 推測禁止：HOW を書かない
+
+# Intent
+目的:
+- 選択中のモデルに Null を親として挿入する
+
+Done:
+- Before.WorldTransform == After.WorldTransform
+
+Constraints:
+  keep:
+    - Before.WorldTransform == After.WorldTransform
+  forbidden:
+    - 他のモデルの選択状態を変更する
+```
+
+---
+
+### ✅ なぜこれが必要か？
+
+| IKDD を読み込ませない                          | IKDD を読み込ませた                     |
+| ------------------------------------- | ------------------------------- |
+| Copilot が通常の補完モードで動作する                | Copilot が IKDD モードで動作する          |
+| HOW（実装方法）を勝手に推測してしまう                 | Intent に基づいて実装を生成する             |
+| 意図が汚染されやすい                            | **意図が固定され、ブレにくい**               |
+
+> **IKDD は「Copilot への API 定義（プロトコル）」**
+> `/// IKDD Live` は **Copilot を IKDD モードに切り替えるスイッチ**
+
+---
+
+### 📌 まとめ（STEP 0 の役割）
+
+```
+0. IKDD を有効にする準備（Copilot にルールを読み込ませる）
+   ↓
+1. Intent（目的を書く）
+   ↓
+2. Done（結果を書く）
+   ↓
+3. few-shot（スタイルを与える）
+   ↓
+4. Snippet（展開して速く書く）
+   ↓
+5. Constraints（必要な時にだけ追加）
+   ↓
+6. トリガー（/// IKDD Live）
+```
+
+---
+
 # ◆ STEP 1：最小（最初に使う形）
 
 ### ✅ 新しく覚える言葉：**Intent（＝目的を書く）**
@@ -306,13 +404,51 @@ IKDD が **常時有効になってしまうと、普段の補完が邪魔にな
 
 ## ✅ まとめ（シンプル → 強化の階段）
 
-| ステップ  | 追加される概念         | 目的               |
-| ----- | --------------- | ---------------- |
-| STEP1 | Intent（目的）      | 意図を固定してズレを防ぐ     |
-| STEP2 | Done（結果）        | WHAT を状態で表現する    |
-| STEP3 | few-shot（例）     | HOW のスタイルを伝える    |
-| STEP4 | Snippet         | 作業を速くする          |
-| STEP5 | Constraints（制約） | 必要になったら制約を追加     |
-| STEP6 | トリガー            | 暴発防止（使うときだけ発動）   |
+| ステップ  | 追加される概念         | 目的                        |
+| ----- | --------------- | ------------------------- |
+| STEP0 | Copilot文脈セット    | Copilot に IKDD ルールを理解させる |
+| STEP1 | Intent（目的）      | 意図を固定してズレを防ぐ              |
+| STEP2 | Done（結果）        | WHAT を状態で表現する             |
+| STEP3 | few-shot（例）     | HOW のスタイルを伝える             |
+| STEP4 | Snippet         | 作業を速くする                   |
+| STEP5 | Constraints（制約） | 必要になったら制約を追加              |
+| STEP6 | トリガー            | 暴発防止（使うときだけ発動）            |
+
+---
+
+# 🧩 LiveCoding.md と IntentFixed.md の役割の違い
+
+IKDD には2つの重要なドキュメントがあり、それぞれ異なる目的を持っています：
+
+| ファイル                                    | 役割                                     | 対象者                |
+| --------------------------------------- | -------------------------------------- | ------------------ |
+| **Manual-IntentFixed_Template_v1.0.md** | IKDD ルールそのもの（Copilot が理解するべきプロトコル）    | **Copilot / AI**   |
+| **LiveCoding.md**（このファイル）                | ルールを使って"作業する手順"（ユーザーが実践するステップ）        | **ユーザー（開発者）**      |
+
+---
+
+### ✅ 簡潔に言うと
+
+* **IntentFixed.md** = Copilot への **API 定義（プロトコル）**
+* **LiveCoding.md** = ユーザーへの **操作マニュアル（ハウツー）**
+
+---
+
+### 🎯 これで Copilot が IKDD ルールで動く理由
+
+1. **Manual-IntentFixed** は **IKDD プロトコル「WHAT→DONE→Constraints」** を定義している
+2. **LiveCoding** は **そのルールに沿って作業する手順** を説明している
+3. **VSCode Snippet** は **意図型テンプレを高速展開する装置**
+4. **`/// IKDD Live`** は **Copilot を IKDD モードに切り替えるスイッチ**
+
+---
+
+### ✨ STEP 0 で何が変わるか？
+
+| 修正前の LiveCoding                 | 修正後（STEP 0 追加後）                         |
+| ------------------------------- | --------------------------------------- |
+| ユーザー向け操作説明のみ                  | **Copilot 用の「文脈セット手順」が先頭に追加**           |
+| IKDD を知っている前提                  | **IKDD をチャットに読み込ませる手順を明文化**            |
+| モード切替の説明なし                    | **`/// IKDD Live` がトリガーとして明記**         |
 
 ---
