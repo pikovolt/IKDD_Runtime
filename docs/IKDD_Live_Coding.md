@@ -63,6 +63,8 @@ HOW:
     - Before.WorldTransform == After.WorldTransform
   forbidden:
     - 他のモデルの選択状態を変更する
+
+ここから回答してください。
 ```
 
 ---
