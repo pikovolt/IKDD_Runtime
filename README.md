@@ -199,7 +199,7 @@ knowledge:
 ## 📚 ドキュメント
 
 ### 📖 コンセプト・理念
-- [IKDD Whitepaper](docs/IKDD_Whitepaper.md) - Intent-First Development / IKDDの核心概念（公開草稿）
+- [IKDD Whitepaper](docs/IKDD_Whitepaper.md) - IKDD / Intent OS Whitepaper v1.0 - 意図駆動開発とIntent OSの核心概念
 - [Intent OS Concept](docs/Intent_OS_Concept.md) - Intent OSの概念定義と実行モデル
 - [IKDD/CDD Concept](docs/CONCEPT_IKDD-CDD.md) - IKDD/CDDの概念と思想
 - [IKDD Core Policy](docs/IKDD_CORE_POLICY.md) - IKDDの根源的理念と基本原則
