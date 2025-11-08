@@ -3,7 +3,7 @@
 *Intent を正しく書くと、HOW（手順）は勝手に決まる*
 
 ```
-Version: v3.4
+Version: v1.0
 Date: 2025-11-08
 Author: Shouichi Kanbara (pikovolt)
 License: CC BY 4.0
