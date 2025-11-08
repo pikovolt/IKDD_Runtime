@@ -1,5 +1,3 @@
----
-
 # Intent-First Development / IKDD Whitepaper (Public Draft)
 
 **Intent is the Asset.
