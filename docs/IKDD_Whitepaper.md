@@ -6,6 +6,7 @@
 Implementation is Disposable.**
 
 Author: **Shouichi Kanbara (pikovolt)**
+Date: **2025-11-08**
 License: **Public concept – shareable with attribution**
 
 ---
