@@ -15,37 +15,36 @@
 ## ❓ What is IKDD Runtime / Intent OS?
 
 **IKDD (Instrumental Knowledge Driven Development)** + **Intent OS**
-turn software development into a process of **defining intent**, instead of writing implementations.
+transform software development from *writing implementation* to *defining intent*.
 
 - Humans write **Intent (WHAT / WHY)**
-- The Runtime determines **HOW** (execution, code generation, pipeline ordering)
+- Runtime resolves **HOW** (execution, order, codegen, pipeline)
 
 | Concept | Meaning |
 |--------|---------|
 | **Intent** | Desired end-state (WHAT / WHY) |
 | **Runtime / Intent OS** | Determines HOW automatically |
-| **Knowledge** | Externalized (YAML), reusable, versioned |
+| **Knowledge** | Externalized and versioned (YAML), not buried in code |
 
-The repository contains the prototype **IKDD Runtime (v0.x)**,
-capable of executing these intent definitions.
+This repository contains the prototype **IKDD Runtime (v0.x)**.
 
 ---
 
 ## 🧠 Why — Problem → Solution
 
-### ❌ Traditional development (HOW-first)
+### ❌ Traditional (HOW-first development)
 
-- Implementation must be written before anything can run
-- Intent gets buried inside procedural code
-- Changing requirements destroys implementation detail
+- Must design and write implementation before anything can work
+- Intent becomes buried in code and comments
+- Refactoring or change breaks implementation
 
-### ✅ IKDD / Intent OS (WHAT-first)
+### ✅ IKDD / Intent OS (WHAT-first development)
 
 > **If Intent is written correctly, HOW becomes deterministic.**
 
-- Intent stays stable even if implementation changes
-- Runtime determines execution flow
-- Knowledge becomes reusable, shareable, inspectable
+- Intent stays stable even when implementation changes
+- Runtime determines execution strategy & branching
+- Knowledge becomes reusable instead of disposable
 
 ---
 
@@ -90,7 +89,7 @@ Intent: |
 
 ## 📚 Documents
 
-> **Note:** Some linked documents are still in Japanese.
+> **Note:** Some linked docs are still written in Japanese.
 > English updates are in progress.
 
 ### 📖 Concepts & Philosophy
@@ -98,6 +97,7 @@ Intent: |
 * [IKDD Whitepaper](docs/IKDD_Whitepaper.md)
 * [IKDD Safety Declaration](docs/IKDD_Safety_Declaration.md)
 * [Intent OS Concept](docs/Intent_OS_Concept.md)
+* [Intent OS Architecture — Overview](docs/Intent_OS_Architecture_OverView.md)
 * [IKDD/CDD Concept](docs/CONCEPT_IKDD-CDD.md)
 * [RKD Concept](docs/CONCEPT_RKD.md)
 * [IKDD Core Policy](docs/IKDD_CORE_POLICY.md)
