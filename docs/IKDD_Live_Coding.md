@@ -1,59 +1,59 @@
-# IKDD Live Coding — 初心者でも理解できるステップ説明付きアウトライン —
+# IKDD Live Coding — Step-by-Step Outline for Beginners —
 
 ---
 
-# ◆ STEP 0：VSCode Copilot に IKDD を理解させる（重要）
+# ◆ STEP 0: Make VSCode Copilot Understand IKDD (Important)
 
-### ✅ Copilot は IKDD のルールを知らない
+### ✅ Copilot Doesn't Know IKDD Rules
 
-> Copilot は IKDD のルールを知らない状態で動作します。
-> そのため、まず最初に **IntentFixed Template**（IKDD のルール）を読み込ませる必要があります。
+> Copilot operates without knowing IKDD rules.
+> Therefore, you first need to make it read the **IntentFixed Template** (IKDD rules).
 
 ---
 
-### 🔹 **手順 1：Copilot に IKDD ルールを読み込ませる**
+### 🔹 **Procedure 1: Make Copilot read IKDD rules**
 
-1. VSCode で `docs/IKDD_Manual-IntentFixed_Template_v1.0.md` を開く
-2. Copilot チャット（`Ctrl+Shift+I` / `Cmd+Shift+I`）を開く
-3. 次のメッセージを送信する：
+1. Open `docs/IKDD_Manual-IntentFixed_Template_v1.0.md` in VSCode
+2. Open Copilot chat (`Ctrl+Shift+I` / `Cmd+Shift+I`)
+3. Send this message:
 
 ```
-このファイルは IKDD のルール（Intent固定）です。
-理解してください。回答は不要です。
+This file contains IKDD rules (Intent-fixed).
+Please understand it. No response needed.
 ```
 
 ---
 
-### 🔹 **手順 2：コードファイルに IKDD モードのトリガーを書く**
+### 🔹 **Procedure 2: Write IKDD mode trigger in code file**
 
-LiveCoding を開始する前に、コードファイルの先頭に以下を書いておきます：
+Before starting LiveCoding, write the following at the beginning of the code file:
 
 ```python
 /// IKDD Live
-# Intent / Done / HOW / few-shot を使用する
-# このファイルは IKDD のルールに従います
+# Use Intent / Done / HOW / few-shot
+# This file follows IKDD rules
 ```
 
-→ これが **Copilot の文脈セット（Context Priming）**
-→ つまり **「IKDD を ON にする」** トリガー
+→ This is **Context Priming for Copilot**
+→ In other words, a trigger to **"turn on IKDD"**
 
 ---
 
-### 🔹 **Copilot 向けサンプルコード（テンプレート）**
+### 🔹 **Sample Code for Copilot (Template)**
 
-以下が、Copilot が **HOW を推測するのではなく、Intent に従って実装** する形式です：
+The following format makes Copilot **implement according to Intent, not infer HOW**:
 
 ```python
 /// IKDD Live
 # IKDD Protocol
-# - Intent（WHAT / WHY / DONE）
-# - HOW（must / forbidden / keep / error）
+# - Intent (WHAT / WHY / DONE)
+# - HOW (must / forbidden / keep / error)
 # - Implementation-IO
-# - 推測禁止：HOW を書かない
+# - No guessing: Don't write HOW
 
 # Intent
-目的:
-- 選択中のモデルに Null を親として挿入する
+Purpose:
+- Insert Null as parent for selected model
 
 Done:
 - Before.WorldTransform == After.WorldTransform
@@ -62,88 +62,88 @@ HOW:
   keep:
     - Before.WorldTransform == After.WorldTransform
   forbidden:
-    - 他のモデルの選択状態を変更する
+    - Change selection state of other models
 
-ここから回答してください。
+Please answer from here.
 ```
 
 ---
 
-### ✅ なぜこれが必要か？
+### ✅ Why Is This Necessary?
 
-| IKDD を読み込ませない                          | IKDD を読み込ませた                     |
+| Without reading IKDD                          | With IKDD read                     |
 | ------------------------------------- | ------------------------------- |
-| Copilot が通常の補完モードで動作する                | Copilot が IKDD モードで動作する          |
-| HOW（実装方法）を勝手に推測してしまう                 | Intent に基づいて実装を生成する             |
-| 意図が汚染されやすい                            | **意図が固定され、ブレにくい**               |
+| Copilot operates in normal completion mode                | Copilot operates in IKDD mode          |
+| Arbitrarily infers HOW (implementation method)                 | Generates implementation based on Intent             |
+| Intent easily gets contaminated                            | **Intent is fixed and less prone to drift**               |
 
-> **IKDD は「Copilot への API 定義（プロトコル）」**
-> `/// IKDD Live` は **Copilot を IKDD モードに切り替えるスイッチ**
-
----
-
-### 📌 まとめ（STEP 0 の役割）
-
-```
-0. IKDD を有効にする準備（Copilot にルールを読み込ませる）
-   ↓
-1. Intent（目的を書く）
-   ↓
-2. Done（結果を書く）
-   ↓
-3. few-shot（スタイルを与える）
-   ↓
-4. Snippet（展開して速く書く）
-   ↓
-5. HOW（必要な時にだけ追加）
-   ↓
-6. トリガー（/// IKDD Live）
-```
+> **IKDD is "API definition (protocol) for Copilot"**
+> `/// IKDD Live` is **a switch that toggles Copilot to IKDD mode**
 
 ---
 
-# ◆ STEP 1：最小（最初に使う形）
+### 📌 Summary (Role of STEP 0)
 
-### ✅ 新しく覚える言葉：**Intent（＝目的を書く）**
+```
+0. Preparation to enable IKDD (Make Copilot read the rules)
+   ↓
+1. Intent (Write purpose)
+   ↓
+2. Done (Write result)
+   ↓
+3. few-shot (Give style)
+   ↓
+4. Snippet (Expand to write faster)
+   ↓
+5. HOW (Add only when needed)
+   ↓
+6. Trigger (/// IKDD Live)
+```
 
-> LLM に「目的」を先に宣言すると、意図を勝手に変えにくくなる。
+---
+
+# ◆ STEP 1: Minimum (Initial form to use)
+
+### ✅ New term to learn: **Intent (= Write purpose)**
+
+> When you declare "purpose" to the LLM first, it becomes harder to arbitrarily change intent.
 
 ```
 # Intent
-目的:
-- 選択中のモデルに Null を親として挿入する
+Purpose:
+- Insert Null as parent for selected model
 ```
 
 ---
 
-# ◆ STEP 2：実行後にどうなっていれば OK？を書く
+# ◆ STEP 2: Write what should be the case after execution?
 
-### ✅ 新しく覚える言葉：**Done（＝ゴールを書く）**
+### ✅ New term to learn: **Done (= Write goal)**
 
-> 手順（HOW）ではなく「状態（結果）」を書くのがコツ。
+> The key is to write "state (result)", not procedure (HOW).
 
 ```
 Done:
 - Before.WorldTransform == After.WorldTransform
-  （対象の world transform を一意に表す値が、処理前後で完全に一致する）
+  (Value uniquely representing world transform of target matches completely before and after processing)
 ```
 
-ポイント：
+Points:
 
-* **State（状態）だけ書く**
-* どの API を使うか（HOW）は書かない → Intent 汚染を避ける
+* **Write only State**
+* Don't write which API to use (HOW) → Avoid Intent contamination
 
-> IKDD の Done は **"一致しているか YES/NO で判定できる条件"**
-> であることが重要。
+> IKDD's Done is **"conditions that can be judged as matching YES/NO"**
+> which is important.
 
 ---
 
-# ◆ STEP 3：HOW のヒントを少しだけ与える（few-shot）
+# ◆ STEP 3: Give a little hint of HOW (few-shot)
 
-### ✅ 新しく覚える言葉：**few-shot（＝例を提示してスタイルを教える）**
+### ✅ New term to learn: **few-shot (= Present examples to teach style)**
 
-> 「こういう書き方のコードにしてね」という**例**を渡すだけ。
-> HOW を詳細に書くわけではない。
+> Just pass an **example** saying "write code in this style".
+> Not writing HOW in detail.
 
 ```
 # few-shot
@@ -155,41 +155,41 @@ finally:
     undo.TransactionEnd()
 ```
 
-> few-shot = **HOW の味付け**
-> 意図を変えさせないまま、スタイルを指定できる。
+> few-shot = **Flavoring of HOW**
+> Can specify style without changing intent.
 
 ---
 
-## ◆ STEP 4：自動展開（ストレスをなくす）
+## ◆ STEP 4: Auto-expansion (Eliminate stress)
 
-### ✅ 新しく覚える言葉：**Snippet（スニペット）**
+### ✅ New term to learn: **Snippet**
 
-> **Snippet = テンプレの自動展開機能（VSCodeのショートカット辞書）**
-> 「短い合図（トリガー）」を入力すると、**長いテンプレが一気に展開される**。
-
----
-
-### ▼ 例えるなら：
-
-* メールで `omw` と打つと → `On my way!` に変換される辞書登録
-* スマホの「定型文登録」「ユーザー辞書」と同じ
+> **Snippet = Template auto-expansion function (VSCode shortcut dictionary)**
+> When you enter a "short cue (trigger)", **a long template expands all at once**.
 
 ---
 
-### ▼ VSCode ではこうなる
+### ▼ To give an analogy:
 
-**入力：**
+* Typing `omw` in email → Converts to `On my way!` (dictionary registration)
+* Same as "Canned text registration" or "User dictionary" on smartphones
+
+---
+
+### ▼ Here's how it works in VSCode
+
+**Input:**
 
 ```
 ikdd
 ```
 
-**Enter または Tab を押すと：**
+**Press Enter or Tab:**
 
 ```
 # intent
-目的:
-- （ここに Intent）
+Purpose:
+- (Intent here)
 
 Done:
 - Before.WorldTransform == After.WorldTransform
@@ -203,37 +203,37 @@ finally:
     undo.TransactionEnd()
 ```
 
-が **一瞬で展開される**。
+**Expands instantly**.
 
 ---
 
-### ▼ なぜ必要？（メリット）
+### ▼ Why necessary? (Benefits)
 
-| 手書きだと…                                | Snippet を使うと…    |
+| If handwritten...                                | Using Snippet...    |
 | ------------------------------------- | ---------------- |
-| 毎回 Intent / Done / few-shot を手で書くのが面倒 | 数文字（ikdd）で展開できる  |
-| 記述がブレて、指示が毎回変わる                       | **同じフォーマット（安定）** |
-| 書くたびに考える → 時間がかかる                     | **思考を止めない（連続性）** |
+| Tedious to write Intent / Done / few-shot by hand every time | Expand with a few characters (ikdd)  |
+| Description varies, instructions change each time                       | **Same format (stable)** |
+| Think each time you write → Takes time                     | **Don't stop thinking (continuity)** |
 
-IKDD の目的：
+IKDD's purpose:
 
-> **「思考の速度を止めないこと」**
+> **"Not to stop the speed of thought"**
 
-Snippet は、それを支える **UI の仕組み**。
+Snippet is the **UI mechanism** that supports that.
 
 ---
 
-## ✅ Snippet の設定方法（実際の操作）
+## ✅ How to Set Up Snippet (Actual Operation)
 
-1. VSCode のコマンドパレットを開く
-   　👉 Windows：`Ctrl + Shift + P`
-   　👉 Mac：　　`Cmd + Shift + P`
+1. Open VSCode command palette
+   👉 Windows: `Ctrl + Shift + P`
+   👉 Mac: `Cmd + Shift + P`
 
-2. 検索で「**Configure User Snippets**」を選択
+2. Select "**Configure User Snippets**" in search
 
-3. `global.code-snippets` を選ぶ
+3. Choose `global.code-snippets`
 
-4. 次の JSON を貼る（これが IKDD Snippet）
+4. Paste this JSON (This is IKDD Snippet)
 
 ```jsonc
 {
@@ -242,7 +242,7 @@ Snippet は、それを支える **UI の仕組み**。
     "body": [
       "/// IKDD Live",
       "# intent",
-      "目的:",
+      "Purpose:",
       "- $1",
       "",
       "Done:",
@@ -262,17 +262,17 @@ Snippet は、それを支える **UI の仕組み**。
 
 ---
 
-### ✅ 使い方（超簡単）
+### ✅ How to Use (Super Easy)
 
-1. VSCode で Python ファイルを開く
-2. `ikdd` とタイプ
-3. Tab or Enter → **テンプレ展開**
+1. Open Python file in VSCode
+2. Type `ikdd`
+3. Tab or Enter → **Template expands**
 
 ```
 /// IKDD Live
 # intent
-目的:
-- （←ここに書く）
+Purpose:
+- (← Write here)
 
 Done:
 - Before.WorldTransform == After.WorldTransform
@@ -288,132 +288,132 @@ finally:
 
 ---
 
-## 🧠 これで何が変わる？
+## 🧠 What Changes?
 
-* 目的 / Done / few-shot が **毎回同じフォーマットで出る**
-* **意図を考える時間に集中できる**
-* ChatGPT / Copilot にとって **指令の安定性が高まる**
+* Purpose / Done / few-shot **appears in the same format every time**
+* **Can concentrate on time thinking about intent**
+* **Command stability increases** for ChatGPT / Copilot
 
-> IKDD は「頭で覚える」ものではなく
-> **環境側で守らせる** もの。
-
----
-
-## ✨一番大事なポイント
-
-> **Snippet は IKDD を楽に続けるための "習慣装置"。**
-
-Intent の型を毎回自分で思い出す必要がない。
+> IKDD is not something to "memorize in your head"
+> but something **enforced by the environment**.
 
 ---
 
-# ◆ STEP 5：困ったときだけ制約を追加する（強化版）
+## ✨ Most Important Point
 
-### ✅ 新しく覚える言葉：**HOW（＝やってほしい／やってほしくないを宣言）**
+> **Snippet is a "habit device" to continue IKDD easily.**
 
-Copilot / ChatGPT が **意図を守らず、変な実装を生み始めたときにだけ使う**
-＝ **必要に応じて追加する制約**。
+No need to remember Intent format every time.
 
 ---
 
-### ▼ HOW の使い方（例）
+# ◆ STEP 5: Add constraints only when in trouble (Enhanced version)
+
+### ✅ New term to learn: **HOW (= Declare what you want/don't want done)**
+
+Use **only when Copilot / ChatGPT doesn't follow intent and starts generating strange implementations**
+= **Constraints to add as needed**.
+
+---
+
+### ▼ How to use HOW (Example)
 
 ```
 HOW:
   forbidden:
-    - 選択中以外のオブジェクトを変更する
-    - 自動で命名規則を変える
+    - Change objects other than selected
+    - Automatically change naming conventions
   must:
-    - 新しいオブジェクトは親子関係を保って追加する
+    - Add new objects preserving parent-child relationships
   keep:
     - Before.WorldTransform == After.WorldTransform
   error:
-    - 状態が一致しない場合はエラー扱いにしてよい（raise 使用）
+    - If state doesn't match, treat as error (allow raise)
 ```
 
 ---
 
-### ✅ HOW の要素説明（付加）
+### ✅ HOW Element Descriptions (Additional)
 
 ```
-must       …… 必ず守ってほしい最低限の条件
-forbidden  …… 絶対にやってはいけないこと
-keep       …… "壊してはいけない状態" の宣言（不変条件）
-error      …… 条件に違反したら処理を止めてよい（assert / raise を許可）
+must       …… Minimum conditions that must absolutely be followed
+forbidden  …… Absolutely prohibited actions
+keep       …… Declaration of "states that must not be broken" (invariant conditions)
+error      …… Processing can be stopped if conditions are violated (allow assert / raise)
 ```
 
 ---
 
-### ✅ 重要なポイント
+### ✅ Important Points
 
-| HOW とは？      | HOW ではない |
+| What is HOW?      | What HOW is NOT |
 | -------------------- | ---------------- |
-| 「境界線・禁止範囲・最低限守るべき約束」 | 「実装方法」や「手順」      |
-| WHAT を守るためのルール       | 実装方法を指示するもの      |
-| LLM の暴走を防ぐ           | LLM に実装を押し付ける |
+| "Boundaries, prohibited ranges, minimum promises to keep" | "Implementation methods" or "procedures"      |
+| Rules to protect WHAT       | Instructing implementation methods      |
+| Preventing LLM runaway           | Forcing implementation on LLM |
 
-> **HOW は、"実装方法を固定するためではなく、意図を壊さないためにある"。**
-
----
-
-# ◆ STEP 6：ON / OFF をコントロール（暴発対策）
-
-### ✅ 新しく覚える言葉：**召喚式トリガー（＝IKDD を発動させる合図）**
-
-IKDD が **常時有効になってしまうと、普段の補完が邪魔になる**
-→ 必要なときにだけ IKDD を起動する仕組み。
+> **HOW exists "not to fix implementation methods but to prevent breaking intent".**
 
 ---
 
-### ▼ 1つの文字列が「IKDD モードのスイッチ」になる
+# ◆ STEP 6: Control ON / OFF (Accidental firing countermeasure)
+
+### ✅ New term to learn: **Summon-type trigger (= Signal to activate IKDD)**
+
+If IKDD is **always enabled, normal completion gets in the way**
+→ Mechanism to activate IKDD only when needed.
+
+---
+
+### ▼ One string becomes the "IKDD mode switch"
 
 ```
 /// IKDD Live
 ```
 
-### ▼ 仕組み
+### ▼ Mechanism
 
-* このコメントが **ファイル内にあるときだけ** Copilot が IKDD の文脈として動く
-* 無いときは **普通の補完モード**
+* Only when this comment **exists in the file**, Copilot operates with IKDD context
+* When absent, **normal completion mode**
 
 ---
 
-### ✅ なぜ必要？
+### ✅ Why Necessary?
 
-| 常時 IKDD                | トリガー式 IKDD             |
+| Always IKDD                | Trigger-based IKDD             |
 | ---------------------- | ---------------------- |
-| 普段の補完も IKDD 仕様になる → 邪魔 | 必要な瞬間だけ IKDD を召喚できる    |
-| モード OFF がない → 混乱する     | **ON / OFF を自分で決められる** |
+| Normal completion also becomes IKDD spec → In the way | Can summon IKDD only at needed moments    |
+| No OFF mode → Confusing     | **Can decide ON / OFF yourself** |
 
-> IKDD は「常に使うモード」ではない。
-> **必要になったときだけ召喚する魔法。**
+> IKDD is not "a mode to always use".
+> **Magic to summon only when needed.**
 
 ---
 
-### ▼ 実際の使い方
+### ▼ Actual Usage
 
-1. コードの先頭や Intent の直前に：
+1. At the beginning of code or just before Intent:
 
 ```
 /// IKDD Live
 ```
 
-2. Inline Copilot 実行（`⌘⌥I` / `Ctrl+Enter`）
+2. Execute Inline Copilot (`⌘⌥I` / `Ctrl+Enter`)
 
-3. **Intent / Done の範囲内で実装だけ生成される**
+3. **Only implementation is generated within Intent / Done scope**
 
 ---
 
-## ✅ まとめ（シンプル → 強化の階段）
+## ✅ Summary (Ladder from Simple → Enhanced)
 
-| ステップ  | 追加される概念         | 目的                        |
+| Step  | Concept Added         | Purpose                        |
 | ----- | --------------- | ------------------------- |
-| STEP0 | Copilot文脈セット    | Copilot に IKDD ルールを理解させる |
-| STEP1 | Intent（目的）      | 意図を固定してズレを防ぐ              |
-| STEP2 | Done（結果）        | WHAT を状態で表現する             |
-| STEP3 | few-shot（例）     | HOW のスタイルを伝える             |
-| STEP4 | Snippet         | 作業を速くする                   |
-| STEP5 | HOW（制約） | 必要になったら制約を追加              |
-| STEP6 | トリガー            | 暴発防止（使うときだけ発動）            |
+| STEP0 | Copilot context set    | Make Copilot understand IKDD rules |
+| STEP1 | Intent (purpose)      | Fix intent to prevent drift              |
+| STEP2 | Done (result)        | Express WHAT as state             |
+| STEP3 | few-shot (example)     | Convey HOW style             |
+| STEP4 | Snippet         | Speed up work                   |
+| STEP5 | HOW (constraints) | Add constraints when needed              |
+| STEP6 | Trigger            | Accidental firing prevention (activate only when using)            |
 
 ---

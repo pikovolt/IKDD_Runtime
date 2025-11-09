@@ -1,178 +1,158 @@
-# IKDD_TOOL_PRINCIPLES.md  
-**Instrumental Knowledge Driven Development — 道具原則**
+# IKDD_TOOL_PRINCIPLES.md
+**Instrumental Knowledge Driven Development — Tool Principles**
 
 ---
 
-## 0. 位置づけ
+## 0. Positioning
 
-本書は、IKDD（Instrumental Knowledge Driven Development）における  
-「知識の道具化（Instrumental Knowledge）」と  
-「IKDD Runtime の設計原則（Runtime Principles）」を定義するものである。
+This document defines "Instrumental Knowledge" and "IKDD Runtime Design Principles (Runtime Principles)" in IKDD (Instrumental Knowledge Driven Development).
 
-- **IKDD Core Policy** が理念（WHY）を規定し、  
-- **本書（Tool Principles）** は設計原則（HOW）を定義し、  
-- **IKDD Specification** が技術仕様（WHAT）を定義する。
+- **IKDD Core Policy** defines the philosophy (WHY),
+- **This document (Tool Principles)** defines design principles (HOW),
+- **IKDD Specification** defines technical specifications (WHAT).
 
 ---
 
-## 1. 道具としての知識（Instrumental Knowledge）
+## 1. Knowledge as Tools (Instrumental Knowledge)
 
-IKDD における「道具」とは、  
-人間の意図（WHY / WHAT）を壊すことなく、  
-**操作可能かつ再利用可能な形で保持される知識構造**を指す。
+In IKDD, a "tool" refers to a **knowledge structure that is held in an operable and reusable form without destroying human intent (WHY / WHAT)**.
 
-道具化された知識（Instrumental Knowledge）は、  
-単に情報やスクリプトではなく、  
-**意図を安全に媒介できる構造的存在**でなければならない。
+Instrumentalized knowledge (Instrumental Knowledge) is not merely information or scripts but must be a **structural existence that can safely mediate intent**.
 
 ---
 
-## 2. 知識の道具化の三条件
+## 2. Three Conditions for Knowledge Instrumentalization
 
-「知識の道具化」が成立するためには、以下の3条件を満たす必要がある。
+For "knowledge instrumentalization" to be established, the following three conditions must be met.
 
-| 条件 | 説明 |
+| Condition | Description |
 |------|------|
-| **安全性 (Safety)** | 知識の利用が意図を破壊しないこと。must / forbidden / keep / error により逸脱を防ぐ。 |
-| **安定性 (Stability)** | 意図の再現が文脈に依存せず保証されること。state・contract によって再現性を担保する。 |
-| **可換性 (Commutativity)** | 対象や環境に合わせて手段（HOW）を交換しても、意図（WHY/WHAT）が失われないこと。  
-つまり、IKDDにおける可換性とは、**「意図が環境に依存せず動作できる適応的関係」** を指す。 |
+| **Safety** | The use of knowledge must not destroy intent. Prevent deviation through must / forbidden / keep / error. |
+| **Stability** | Intent reproducibility must be guaranteed independent of context. Ensure reproducibility through state and contract. |
+| **Commutativity** | Intent (WHY/WHAT) must not be lost even when means (HOW) are exchanged according to objects or environments.
+That is, commutativity in IKDD refers to **"an adaptive relationship where intent can operate independently of the environment"**. |
 
-これらの3条件は、知識が**安全に・安定して・同じ意味で使える**  
-「道具」として機能するための根本的要件である。
+These three conditions are fundamental requirements for knowledge to function as a "tool" that can be used **safely, stably, and with the same meaning**.
 
-特に「可換性」は IKDD における哲学的中核であり、  
-異なるAI・環境・言語においても意図の意味が保持される、  
-**意味的整合性（semantic commutativity）**──すなわち、  
-「意図が環境に依存せず伝達される構造的関係」──を指す。
+"Commutativity" in particular is the philosophical core of IKDD, referring to **semantic commutativity**—that is, "the structural relationship where intent is transmitted independently of the environment"—where the meaning of intent is preserved across different AIs, environments, and languages.
 
 ---
 
-## 3. 道具としての成立条件（4原則）
+## 3. Establishment Conditions as Tools (4 Principles)
 
-知識が「道具」として IKDD Runtime において機能するためには、  
-以下の4原則を満たす必要がある。  
-これは「知識の道具化」を支える **Runtime 原則** である。
+For knowledge to function as a "tool" in IKDD Runtime, it must meet the following 4 principles.
+These are the **Runtime principles** that support "knowledge instrumentalization".
 
-| 原則 | 説明 |
+| Principle | Description |
 |------|------|
-| **構造性 (Structurality)** | WHY/WHAT を構造として保持し、形式的に操作可能であること。 |
-| **操作性 (Operability)** | 人間とAIの双方がその構造を理解し、再構成・再利用できること。 |
-| **制約性 (Constraintness)** | must / forbidden / keep / error による行動境界が存在し、破れないこと。 |
-| **再現性 (Reproducibility)** | 同一の意図構造が、異なる文脈でも同様に再現可能であること。 |
+| **Structurality** | Must hold WHY/WHAT as structure and be formally operable. |
+| **Operability** | Both humans and AI can understand the structure and reconstruct/reuse it. |
+| **Constraintness** | Behavioral boundaries through must / forbidden / keep / error exist and cannot be broken. |
+| **Reproducibility** | The same intent structure can be reproduced similarly even in different contexts. |
 
-> ✅ 「三条件（Safety, Stability, Commutativity）」が **知識の性質**  
-> ✅ 「四原則（Structure, Operation, Constraint, Reproduction）」が **Runtimeの設計基盤**
+> ✅ "Three conditions (Safety, Stability, Commutativity)" are **properties of knowledge**
+> ✅ "Four principles (Structure, Operation, Constraint, Reproduction)" are **design foundations of Runtime**
 
 ---
 
-## 4. 安定性と自由度（variation）
+## 4. Stability and Freedom (variation)
 
-IKDDでは、安定性と自由度を対立概念ではなく、  
-**動的に釣り合う軸**として扱う。
+In IKDD, stability and freedom are not treated as opposing concepts but as **dynamically balanced axes**.
 
-| 要素 | 意味 |
+| Element | Meaning |
 |------|------|
-| **安定性 (Stability)** | 意図を壊さずに保持する力。再現性を担保する。 |
-| **自由度 (Variation)** | 状況や対象に応じて、意味を保ったまま変化できる柔軟性。 |
+| **Stability** | The force to hold intent without breaking it. Ensures reproducibility. |
+| **Freedom (Variation)** | Flexibility to change while preserving meaning according to situations or objects. |
 
-完全な安定は創造性を奪い、完全な自由は再現性を失う。  
-IKDDはその中間にある「**安全な変動（safe variation）**」を設計対象とする。
+Complete stability kills creativity, complete freedom loses reproducibility.
+IKDD targets "**safe variation**" in the middle.
 
-変動は数値ではなく、**文脈的なルール**として定義される。  
-たとえば、「この意図は環境設定を変えても保持される」「AI補完は許されるが制約を超えない」  
-といった条件がそれに該当する。
+Variation is defined not as numerical values but as **contextual rules**.
+For example, conditions like "this intent is preserved even if environment settings change" or "AI completion is permitted but does not exceed constraints" fall into this category.
 
 ---
 
-## 5. Contextual Stability（文脈的安定性）
+## 5. Contextual Stability
 
-安定性とは、構造的固定ではなく「文脈の中で再現できること」である。
-同じ意図でも、環境や条件により HOW は変化する。
-IKDDはこの差異を再現性を保ったまま許容する。
+Stability is not structural fixation but "being reproducible within context".
+Even with the same intent, HOW changes depending on environment and conditions.
+IKDD tolerates this difference while maintaining reproducibility.
 
-| 状況     | 安定の条件                          |
+| Situation     | Stability Condition                          |
 | ------ | ------------------------------ |
-| ローカル実行 | forbidden により環境依存モジュールを禁止      |
-| チーム開発  | IEP構造を共有し、意図のドリフトを防止           |
-| 自動実行   | contract (pre/post) により実行安全を保証 |
+| Local execution | Prohibit environment-dependent modules via forbidden      |
+| Team development  | Share IEP structure to prevent intent drift           |
+| Automated execution   | Ensure execution safety via contract (pre/post) |
 
 ---
 
-## 6. 構造の三層分離
+## 6. Three-Layer Separation of Structure
 
-IKDD の「道具原則」は、次の3層の関係で設計される。
+IKDD's "tool principles" are designed with the following three-layer relationships.
 
-| 層                         | 内容                            | 安定／自由のバランス |
+| Layer                         | Content                            | Stability/Freedom Balance |
 | ------------------------- | ----------------------------- | ---------- |
-| **Intent層 (WHY/WHAT)**    | 人間が定義する目的                     | 高安定／低自由    |
-| **Structure層 (IEP)**      | 意図の構造化。state / constraint を含む | 中安定／中自由    |
-| **Implementation層 (HOW)** | 実装・手段の選択領域                    | 低安定／高自由    |
+| **Intent Layer (WHY/WHAT)**    | Purpose defined by humans                     | High stability / Low freedom    |
+| **Structure Layer (IEP)**      | Intent structuring. Includes state / constraint | Medium stability / Medium freedom    |
+| **Implementation Layer (HOW)** | Implementation and means selection domain                    | Low stability / High freedom    |
 
-IKDDは、この三層を常に明示的に区別することで、
-「どこまでが意図で、どこからが手段か」を判別可能に保つ。
+By always explicitly distinguishing these three layers, IKDD keeps it identifiable "how far is intent and where means begin".
 
 ---
 
-## 7. 制約群との関係
+## 7. Relationship with Constraint Groups
 
-IKDD における must / forbidden / keep / error は、  
-道具としての「安全性」および Runtime の「安定性」を支える要素である。  
-これらの制約は、知識が意図を逸脱しないための **倫理的境界条件** として機能する。
+In IKDD, must / forbidden / keep / error support "safety" as tools and "stability" of Runtime.
+These constraints function as **ethical boundary conditions** to prevent knowledge from deviating from intent.
 
-| 制約            | 意味   | 関係        |
+| Constraint            | Meaning   | Relationship        |
 | ------------- | ---- | --------- |
-| **must**      | 必須要素 | 安定性の中核    |
-| **forbidden** | 禁止要素 | 安全性の境界    |
-| **keep**      | 不変要素 | 文脈的安定性の維持 |
-| **error**     | 停止条件 | 安全装置・防壁   |
+| **must**      | Required element | Core of stability    |
+| **forbidden** | Prohibited element | Boundary of safety    |
+| **keep**      | Immutable element | Maintenance of contextual stability |
+| **error**     | Stop condition | Safety device/barrier   |
 
-これらは IKDD の「倫理的境界条件」として扱われ、
-Runtime における安全な挙動の最終防線を形成する。
+These are treated as IKDD's "ethical boundary conditions" and form the final line of defense for safe behavior in Runtime.
 
 ---
 
-## 8. 評価軸（良い道具の条件）
+## 8. Evaluation Axes (Conditions for Good Tools)
 
-IKDD における「良い道具」とは、
-意図を壊さず、過剰に固定化しない知識構造である。
+A "good tool" in IKDD is a knowledge structure that does not break intent and is not overly fixed.
 
-| 観点        | 評価基準              |
+| Aspect        | Evaluation Criterion              |
 | --------- | ----------------- |
-| **再現性**   | 同じ意図から同じ行為が再構成できる |
-| **拡張性**   | 新しい条件・環境に適応できる    |
-| **理解可能性** | 人間が構造的に理解できる      |
-| **介入耐性**  | AIや他者の操作で意図が壊れない  |
+| **Reproducibility**   | Same actions can be reconstructed from the same intent |
+| **Scalability**   | Can adapt to new conditions and environments    |
+| **Understandability** | Humans can understand structurally      |
+| **Intervention Resistance**  | Intent is not broken by AI or others' operations  |
 
 ---
 
-## 9. 最終原則：「意図は推測されない」
+## 9. Final Principle: "Intent Is Not Inferred"
 
-> **IKDDの第一原則は、「意図を推測しない」ことである。**
+> **IKDD's first principle is "do not infer intent".**
 
-WHY / WHAT は常に構造として明示され、
-HOW（手段）はそれに従属する。
-AI・人・システムが関与しても、意図の意味は変化してはならない。
+WHY / WHAT are always made explicit as structure,
+and HOW (means) is subordinate to them.
+Even if AI, people, or systems are involved, the meaning of intent must not change.
 
 ---
 
-## 10. 総括
+## 10. Summary
 
-「知識の道具化」と「Runtime原則」は、
-それぞれ別の階層でありながら、
-IKDD全体を支える二本柱である。
+"Knowledge Instrumentalization" and "Runtime Principles" are two pillars that support the entirety of IKDD while being separate layers.
 
-| 階層                              | 内容               | 主な原理            |
+| Layer                              | Content               | Main Principles            |
 | ------------------------------- | ---------------- | --------------- |
-| **知識層（Instrumental Knowledge）** | 知識が道具として成立する条件   | 安全性・安定性・可換性     |
-| **システム層（IKDD Runtime）**         | 道具を壊さずに動作させる設計原則 | 構造性・操作性・制約性・再現性 |
+| **Knowledge Layer (Instrumental Knowledge)** | Conditions for knowledge to function as tools   | Safety, Stability, Commutativity     |
+| **System Layer (IKDD Runtime)**         | Design principles to operate without breaking tools | Structurality, Operability, Constraintness, Reproducibility |
 
-この二層の整合により、IKDDは
-「AIや人の手段を超えて、意図を壊さず動かす開発体系」として成立する。
+Through the consistency of these two layers, IKDD is established as "a development system that operates without breaking intent beyond AI or human means".
 
 ---
 
-> **IKDDは、“意図を守るために知識を使う” 体系である。**
-> 知識は目的ではなく、意図を実現するための **Instrument（道具）** でなければならない。
+> **IKDD is a system that "uses knowledge to protect intent".**
+> Knowledge must not be an end in itself but an **Instrument (tool)** to realize intent.
 
 ---

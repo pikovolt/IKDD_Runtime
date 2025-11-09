@@ -1,53 +1,53 @@
 # RKD: Reusable Knowledge Design / Definition
 
-> **「実装ではなく知識を作る」ための設計手法**
+> **A design method for "creating knowledge, not implementation"**
 
 ---
 
-## RKD が解決する問題
+## Problems RKD Solves
 
-IKDD と CDD によって
+With IKDD and CDD:
 
-* 意図（WHY/WHAT）は固定できる
-* 推論の逸脱も CDD によって防げる
+* Intent (WHY/WHAT) can be fixed
+* Inference deviation can also be prevented by CDD
 
-しかし *実装（HOW）側にも問題* が残っている：
+However, *problems remain on the implementation (HOW) side*:
 
-| 問題                     | 説明                    |
+| Problem                     | Description                    |
 | ---------------------- | --------------------- |
-| 実装が Knowledge として増え続ける | snippet がスパゲッティ化する    |
-| 修正が Knowledge 全体に波及する  | 最悪「動いていたコードが動かなくなる」   |
-| 再利用性が担保できない            | コピペ → divergence → 破綻 |
+| Implementation keeps growing as Knowledge | Snippets become spaghetti    |
+| Modifications propagate to all Knowledge  | Worst case: "Code that was working stops working"   |
+| Reusability cannot be guaranteed            | Copy-paste → divergence → failure |
 
-> **IKDD が「意図を固定」** するなら、
-> **RKD は「知識を再利用可能にする」**。
+> If **IKDD "fixes intent"**,
+> **RKD "makes knowledge reusable"**.
 
 ---
 
-## RKD の核心
+## Core of RKD
 
-> **「コードを書く」ではなく、「知識を収穫する」。**
+> **"Harvest knowledge," not "write code".**
 
 ```text
-実装（コード） = 消費財
-Knowledge（知識） = 資産
+Implementation (Code) = Consumable
+Knowledge = Asset
 ```
 
-### ✅ IKDD が扱うのは「実装」
+### ✅ IKDD deals with "implementation"
 
-### ✅ RKD が扱うのは「定義としての知識」
+### ✅ RKD deals with "knowledge as definition"
 
 ---
 
-## RKD の構造
+## RKD Structure
 
-| ファイル              | 役割                                  |
+| File              | Role                                  |
 | ----------------- | ----------------------------------- |
-| `knowledge.yaml`  | 知識モジュールの定義 / interface / invariants |
-| `versions/*.yaml` | 過去バージョンの Knowledge（変更履歴）            |
-| `snippets/*.py`   | 実装の参考（Knowledge の具体例）               |
+| `knowledge.yaml`  | Knowledge module definition / interface / invariants |
+| `versions/*.yaml` | Past versions of Knowledge (change history)            |
+| `snippets/*.py`   | Implementation reference (concrete examples of Knowledge)               |
 
-#### knowledge.yaml の例：
+#### Example of knowledge.yaml:
 
 ```yaml
 knowledge:
@@ -56,11 +56,11 @@ knowledge:
     output: rows
     invariant:
       - "rows is list[dict]"
-    description: "CSV を読み込み Python dict list に変換する"
+    description: "Load CSV and convert to Python dict list"
     version: "1.3.2"
 ```
 
-> **Knowledge = 「データ変換の契約」＋「破ってはいけない invariant」**
+> **Knowledge = "Data transformation contract" + "Invariants that must not be broken"**
 
 ---
 
@@ -68,13 +68,13 @@ knowledge:
 
 | IKDD      | CDD         | RKD            |
 | --------- | ----------- | -------------- |
-| 意図を固定する   | 文脈を固定する     | 知識を固定する        |
-| WHAT      | Context     | HOW の知識        |
+| Fix intent   | Fix context     | Fix knowledge        |
+| WHAT      | Context     | HOW knowledge        |
 | tool.yaml | constraints | knowledge.yaml |
 
 ---
 
-## RKD が追加する概念：**Knowledge Versioning**
+## Concept Added by RKD: **Knowledge Versioning**
 
 ```
 knowledge/
@@ -84,78 +84,78 @@ knowledge/
     v2.0.0.yaml
 ```
 
-> 「最新に上書き」ではなく **知識を育てる**。
+> Not "overwrite to latest" but **grow knowledge**.
 
 ---
 
-## RKD が実現する未来
+## Future RKD Realizes
 
-> **意図(WHAT)** は変えてよい
-> **文脈(Context)** は守る
-> **知識(Knowledge)** は育てる
+> **Intent (WHAT)** can change
+> **Context** is protected
+> **Knowledge** is grown
 
 | Before (Prompt / Coding) | After (IKDD + CDD + RKD) |
 | ------------------------ | ------------------------ |
-| 実装者が悩む                   | Context 設計者が知識を選ぶ        |
-| コードは使い捨て                 | Knowledge は蓄積される         |
-| 実装 = 労働                  | 知識 = 資産                  |
+| Implementer worries                   | Context designer selects knowledge        |
+| Code is disposable                 | Knowledge accumulates         |
+| Implementation = labor                  | Knowledge = asset                  |
 
 ---
 
-## IKDD / CDD / RKD の関係（決定版）
+## IKDD / CDD / RKD Relationship (Definitive Version)
 
 ```
 ┌──────────── Intent (WHY/WHAT) ────────────┐
 │                IKDD                        │
-│      意図を固定し、HOW を分離する           │
+│      Fix intent and separate HOW           │
 └──────────────┬─────────────────────────┘
-                │ Context（枠）
+                │ Context (framework)
                 ▼
 ┌──────────── CDD ────────────────────┐
-│  AI の推論を拘束し、逸脱を防ぐ           │
+│  Constrain AI inference and prevent deviation           │
 │  must / forbidden / immutable           │
 └──────────────┬──────────────────────┘
-                │ Knowledge（HOWの部品）
+                │ Knowledge (HOW components)
                 ▼
 ┌──────────── RKD ────────────────────┐
-│  Knowledge を資産として育て、再利用する  │
+│  Grow and reuse Knowledge as asset  │
 │  versioning / invariant / reuse         │
 └──────────────────────────────────────┘
 ```
 
 **Intent → Context → Knowledge**
-という **一方向の支配関係** になることで、揺らぎが消える。
+This **unidirectional dominance relationship** eliminates wavering.
 
 ---
 
-## 1行まとめ
+## One-Line Summary
 
-> **RKD =「知識を設計し、育て、再利用する」ための方法論。**
+> **RKD = Methodology for "designing, growing, and reusing knowledge".**
 
-IKDD が **WHAT を書く**
-CDD が **推論を封じる**
-RKD が **Knowledge を資産化** する
+IKDD **writes WHAT**
+CDD **blocks inference**
+RKD **turns Knowledge into assets**
 
 ---
 
-## Document 差し替え用テンプレート（追加だけしたい場合）
+## Document Replacement Template (If You Only Want to Add)
 
 ```markdown
 ## RKD: Reusable Knowledge Design / Definition
 
-IKDD が意図（WHY/WHAT）を固定し、
-CDD が推論を封じるなら、
+If IKDD fixes intent (WHY/WHAT),
+and CDD blocks inference,
 
-> RKD は「知識（HOW）を資産化」する。
+> RKD "turns knowledge (HOW) into assets".
 
-### 目的
-- Knowledge を使い捨てにしない
-- versioning / invariant / 再利用可能にする
+### Purpose
+- Don't make Knowledge disposable
+- Make it versionable / invariant / reusable
 
-### 成果物
-- `knowledge.yaml`（契約）
-- `versions/*.yaml`（歴史）
-- `snippets/*.py`（実装例）
+### Deliverables
+- `knowledge.yaml` (contract)
+- `versions/*.yaml` (history)
+- `snippets/*.py` (implementation examples)
 
-> コードを書くのではなく、知識を収穫する。
+> Harvest knowledge, don't write code.
 ```

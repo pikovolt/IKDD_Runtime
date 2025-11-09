@@ -1,6 +1,6 @@
 # 📄 IKDD / Intent OS Whitepaper v1.0
 
-*Intent を正しく書くと、HOW（手順）は勝手に決まる*
+*When you write Intent correctly, HOW (procedure) is automatically determined*
 
 ```
 Version: v1.0
@@ -11,149 +11,149 @@ License: CC BY 4.0
 
 ---
 
-## Executive Summary（概要）
+## Executive Summary
 
-従来のソフトウェア開発は **HOW（手順）を書くことが前提** だった。
+Traditional software development **presupposed writing HOW (procedures)**.
 
 ```
-どう実行するか（HOW）を人間が考える
+Humans think about how to execute (HOW)
 ```
 
-IKDD / Intent OS は、この前提を覆す。
+IKDD / Intent OS overturns this assumption.
 
 ```mermaid
 flowchart LR
     subgraph HUMAN["Human / Developer / Artist"]
-        A["Intent を書く\nWHAT / Done / Invariant"]
+        A["Write Intent\nWHAT / Done / Invariant"]
     end
 
-    A -->|"オーダー（WHATのみ）"| OS
+    A -->|"Order (WHAT only)"| OS
 
-    subgraph OS["Intent OS（HOW を気にする必要がなくなる）"]
+    subgraph OS["Intent OS (No need to worry about HOW)"]
         direction TB
-        P["1. Intent Parser / Validator\n(見なくてもよくなる)"]
-        C["2. Constraint / Invariant Engine\n(見なくてもよくなる)"]
-        G["3. HOW Generator (Compiler)\n(見なくてもよくなる)"]
+        P["1. Intent Parser / Validator\n(No need to see)"]
+        C["2. Constraint / Invariant Engine\n(No need to see)"]
+        G["3. HOW Generator (Compiler)\n(No need to see)"]
         P --> C --> G
     end
 
-    G -->|"Execution Plan（HOW）"| R
+    G -->|"Execution Plan (HOW)"| R
 
     subgraph RT["Runtime (Executor)"]
-        R["処理実行 → 状態を観測・Done 判定"]
+        R["Execute processing → Observe state, judge Done"]
     end
 ```
 
-> **人間は WHAT（意図）を書く。HOW（手順）は OS が決める。**
+> **Humans write WHAT (intent). OS determines HOW (procedure).**
 
-Intent（WHAT）と Done（状態）のみを宣言すると、
-HOW は OS によって決まる（Runtime + Compiler に委譲）。
+When you declare only Intent (WHAT) and Done (state),
+HOW is determined by the OS (delegated to Runtime + Compiler).
 
 ---
 
-## 1. WHY — なぜ Intent が必要なのか
+## 1. WHY — Why Intent Is Necessary
 
-手順を書けば書くほど、コードは膨れ、知識は属人化する。
+The more procedures you write, the more code bloats and knowledge becomes siloed.
 
-| 従来      | 問題                   |
+| Traditional      | Problem                   |
 | ------- | -------------------- |
-| HOW を書く | 実装依存。属人化する           |
-| 修正時     | WHAT が変わらなくても書き換えが必要 |
-| テスト     | コードとは別に書く必要          |
+| Write HOW | Implementation-dependent. Becomes siloed           |
+| When modifying     | Rewriting necessary even if WHAT doesn't change |
+| Testing     | Must be written separately from code          |
 
-IKDD の原則：
+IKDD principle:
 
-> **意図は、実装に従属しない。**
+> **Intent does not subordinate to implementation.**
 
 ---
 
-## 2. IKDD / Intent OS の構造
+## 2. IKDD / Intent OS Structure
 
-Intent OS は **WHAT OS**。
-手順（HOW）を生成するのは Runtime。
+Intent OS is **WHAT OS**.
+Runtime generates procedures (HOW).
 
 ```
 Intent OS (WHAT)
-        ↓ Intent（目的と状態を宣言）
+        ↓ Intent (Declare purpose and state)
 IKDD Compiler (HOW Generator)
-        ↓ HOW（Execution Plan を生成）
+        ↓ HOW (Generate Execution Plan)
 Runtime (Executor)
 ```
 
 ---
 
-## 3. Intent 記述の最小ルール
+## 3. Minimum Rules for Intent Description
 
-**例：MotionBuilder / Maya 共通 Null 挿入**
+**Example: MotionBuilder / Maya Common Null Insertion**
 
-IKDD の Intent 定義は「目的（WHAT）」と「状態（Done / Invariant）」だけを書く。
-HOW（手順、API、Null の具体的な作り方）は Intent に書かない。
+IKDD Intent definitions write only "purpose (WHAT)" and "state (Done / Invariant)".
+Don't write HOW (procedures, API, concrete way to create Null) in Intent.
 
 ```yaml
 id: InsertNullAsNewParent
 
 Intent: |
-  親階層を変更しても、対象モデルの見た目（World Transform）が変わらない状態にする。
+  Make it so target model's appearance (World Transform) doesn't change even if parent hierarchy changes.
 
 Context: |
-  - 親として追加するノードは「空ノード」であること（新規生成）
-  - 空ノードの種類は環境に応じて Runtime が決定する
+  - Node to add as parent must be "empty node" (newly generated)
+  - Type of empty node is determined by Runtime according to environment
 
 Invariant:
   - Before.WorldTransform == After.WorldTransform
 
 Done:
-  - 対象モデルが新しい空ノードの直下に存在する
+  - Target model exists directly under new empty node
 ```
 
 > Intent = WHAT
-> Context = WHAT を成立させるための前提（Null の要件）
-> Invariant / Done = 評価条件（状態ベース）
+> Context = Prerequisites for WHAT to be satisfied (Null requirements)
+> Invariant / Done = Evaluation conditions (state-based)
 
 ---
 
-## 4. 「Intent を正しく書くと、HOW は勝手に決まる」
+## 4. "When You Write Intent Correctly, HOW Is Automatically Determined"
 
-HOW を書かない理由は **状態ベース** で実行するため。
+The reason for not writing HOW is to execute on a **state basis**.
 
-| 従来          | IKDD                    |
+| Traditional          | IKDD                    |
 | ----------- | ----------------------- |
-| 手続き（HOW）を書く | **状態（WHAT）を書く**         |
-| コードとテストは別   | **Done がテストにもなる**       |
-| 実装によって変更    | **Intent が変わらなければ変更不要** |
+| Write procedures (HOW) | **Write state (WHAT)**         |
+| Code and tests are separate   | **Done also serves as test**       |
+| Changes by implementation    | **No change needed if Intent doesn't change** |
 
 ---
 
-## 5. IKDD Runtime（v0.3）の動作フロー
+## 5. IKDD Runtime (v0.3) Operation Flow
 
 ```mermaid
 flowchart LR
     User --> IntentOS
     IntentOS -->|Intent / Done / Invariant| IKDDCompiler
     IKDDCompiler -->|Execution Plan| AssemblyExecutor
-    AssemblyExecutor -->|実行| DCC(Maya/MB/etc)
+    AssemblyExecutor -->|Execute| DCC(Maya/MB/etc)
 ```
 
 ---
 
-## 6. Use Case（3DCG パイプライン）
+## 6. Use Case (3DCG Pipeline)
 
-例：MotionBuilder と Maya で動く **共通 Null 挿入ツール**
+Example: **Common Null insertion tool** that works in MotionBuilder and Maya
 
-* DCCごとの差異（APIなど）を Runtime が吸収
-* Intent は「目的と状態」しか書かない
+* Runtime absorbs differences between DCCs (API, etc.)
+* Intent only writes "purpose and state"
 
 ---
 
-## 7. 結論
+## 7. Conclusion
 
 ```
-手順を書くな。
-意図を書け。
-HOW は OS に任せろ。
+Don't write procedures.
+Write intent.
+Leave HOW to the OS.
 ```
 
-Intent を正しく書くと、HOW は勝手に決まる。
+When you write Intent correctly, HOW is automatically determined.
 
 ---
 
@@ -161,7 +161,7 @@ Intent を正しく書くと、HOW は勝手に決まる。
 
 # Appendix A — Full Intent Definition
 
-> 本付録は、Intent OS のルールに従って実際に生成された成果物（Intent 定義の例）を示すものであり、仕様や実装手順を説明するものではありません。
+> This appendix shows a deliverable (example of Intent definition) actually generated following Intent OS rules and does not explain specifications or implementation procedures.
 
 **/whitepaper/v3.4/source/ExecutePipeline_full.yaml**
 
@@ -170,70 +170,70 @@ id: ExecutePipeline
 version: 0.3-complete
 
 Intent: |
-  pipeline（工程 sequence）を実行し、定義された工程がすべて完了した状態にする。
-  実行順序は sequence の定義に従うものとする。
+  Execute pipeline (process sequence) and bring all defined processes to completion.
+  Execution order shall follow sequence definition.
 
 Context: |
   - IKDD Runtime / Sequence Dispatcher
-  - sequence は YAML で外部化される
-  - process は Python module として実装される（例: src/process/*.py）
-  - Intent は WHAT / Runtime は HOW（OS層）が担当する
+  - sequence is externalized in YAML
+  - process is implemented as Python module (e.g. src/process/*.py)
+  - Intent is WHAT / Runtime is HOW (OS layer) responsible
 
 PreCondition: |
-  - entry sequence（YAML）が存在している
-  - sequence_root と process_root が指定されている
-  - mapping.sequence / mapping.process が解決可能である
+  - entry sequence (YAML) exists
+  - sequence_root and process_root are specified
+  - mapping.sequence / mapping.process are resolvable
 
 HOW:
   must:
-    # --- YAMLとprocessの関係 ---
-    - sequence は YAML（外部ファイル）として定義されること
-    - sequence の項目は process または sequence を含むことができ、再帰構造を許容する
-    - mapping.sequence と mapping.process が存在すること
+    # --- Relationship between YAML and process ---
+    - sequence must be defined as YAML (external file)
+    - sequence items can include process or sequence, allowing recursive structure
+    - mapping.sequence and mapping.process must exist
 
     # --- flatten / path / depth ---
-    - Runtime は実行前に sequence を flatten する
-    - flatten の際、各 process に以下の情報を付与する:
-        * depth: sequence の階層深さ（0 が root）
-        * path: "親/子/孫" の形式で表す階層パス（例: "main/SubTask"）
-        * source: どの YAML から来たか（例: "main.yaml"）
-    - depth > depth_max ならエラーとし、実行を開始しない
+    - Runtime flattens sequence before execution
+    - When flattening, add following information to each process:
+        * depth: sequence hierarchy depth (0 is root)
+        * path: Hierarchical path expressed as "parent/child/grandchild" (e.g. "main/SubTask")
+        * source: Which YAML it came from (e.g. "main.yaml")
+    - If depth > depth_max, error and don't start execution
 
-    # --- preview（dry run）---
-    - preview モードでは flatten 結果を表示し、実行は行わない
-    - preview は階層表示（元の nested 構造）が可能であること
-    - preview は flatten（execution plan）を表示すること
+    # --- preview (dry run)---
+    - preview mode displays flatten result and doesn't execute
+    - preview must be able to display hierarchy (original nested structure)
+    - preview must display flatten (execution plan)
 
-    # --- verbose（本番実行）---
-    - verbose モードでは flatten の順序で process を実行する
-    - 実行ログでは path を "(main/SubTask)" の形式で表示すること
-    - 表示に depth のインデントは使用せず、path のみで階層を識別できるようにする
+    # --- verbose (production execution)---
+    - verbose mode executes process in flatten order
+    - Execution log must display path in format "(main/SubTask)"
+    - Don't use depth indentation for display, enable hierarchy identification by path only
 
     # --- fail / fail_post ---
-    - process が例外を出した場合、fail_post が定義されていれば必ず実行する
-    - fail_post → 次工程への propagate は任意（Runtimeに委譲）
+    - If process throws exception, must execute fail_post if defined
+    - fail_post → propagate to next process is optional (delegate to Runtime)
 
   forbidden:
-    - flatten 後の順番を変更して実行すること
-    - sequence を実行中に暗黙的に上書きすること
-    - intent 側で HOW（runtime 実装）を推測・記述すること
+    - Execute by changing order after flatten
+    - Implicitly overwrite sequence during execution
+    - Infer or describe HOW (runtime implementation) on intent side
 
   keep:
-    - sequence の実行順序を保持すること
-    - 明示した shared state は工程間で引き継ぐこと
-    - temp state は process 毎に破棄されること
+    - Preserve sequence execution order
+    - Explicitly stated shared state is inherited between processes
+    - temp state is discarded per process
 
 Done: |
-  - flatten 結果の順序通りにすべての process が実行された
-  - verbose 実行時、各 process の path が表示された（例: "> Validate (main/SubTask)"）
-  - preview モードでは、実行計画（階層 + flatten）が出力され、process が実行されていない
-  - depth_max を超える階層構造は実行前にエラーとなる
+  - All processes executed in flatten result order
+  - During verbose execution, path of each process was displayed (e.g. "> Validate (main/SubTask)")
+  - In preview mode, execution plan (hierarchy + flatten) is output and processes are not executed
+  - Hierarchical structure exceeding depth_max errors before execution
 
 Meta: |
   rules:
-    - Intent は WHAT を表し、HOW（実装の詳細）は Runtime が管理する
-    - 推測禁止：Intent 層に実装や API の情報を書かない
-    - Runtime 層は Intent の HOW に従う OS として振る舞う
+    - Intent represents WHAT, Runtime manages HOW (implementation details)
+    - No guessing: Don't write implementation or API information in Intent layer
+    - Runtime layer behaves as OS following Intent's HOW
 ```
 
 ---

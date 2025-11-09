@@ -1,260 +1,239 @@
 # IKDD Core Policy
 
-**Instrumental Knowledge Driven Development — 根源的理念と基本原則**
+**Instrumental Knowledge Driven Development — Fundamental Philosophy and Core Principles**
 
-> *「意図は、手段に従属しない。」*
-> — IKDD 基本哲学
-
----
-
-## 0. 序文
-
-IKDD（Instrumental Knowledge Driven Development）は、
-従来の「実装駆動」や「モデル駆動」開発の枠を超え、
-**意図（Intent）を第一級構成要素として扱う知的開発体系**である。
-
-本ポリシーは、IKDDにおけるあらゆる定義・設計・実装の根底にある
-**倫理・哲学・一貫性の原則**を明文化するものである。
-
-この文書は、IKDD仕様（v0.2, v0.3, …）や Runtime 実装層を超えて
-常に上位に存在する。
-すべての開発・設計判断は、このポリシーへの準拠を前提とする。
+> *"Intent does not subordinate to means."*
+> — IKDD Core Philosophy
 
 ---
 
-## 1. Intent-First（意図優先）
+## 0. Preface
 
-すべての設計・実装・検証は、
-WHY（目的）と WHAT（意図内容）に基づき導出されなければならない。
-HOW（手段）は、その結果として定義される派生情報である。
+IKDD (Instrumental Knowledge Driven Development) transcends the traditional "implementation-driven" and "model-driven" development frameworks, establishing **an intellectual development system that treats Intent as a first-class component**.
 
-> ✅ WHY/WHAT を欠く HOW は、IKDD的には「定義不在」と見なされる。
-> ✅ WHY/WHAT が変化した場合、HOW は再展開される。
+This policy articulates the **ethics, philosophy, and consistency principles** that underlie all definitions, designs, and implementations in IKDD.
 
----
-
-## 2. No Assumption（推測禁止）
-
-実装過程における**暗黙的な推測・補完**を禁止する。
-AIまたは人間が、未定義の意図を想定して行動することは、
-IKDD体系においてはエラーとみなされる。
-
-> ✅ 「想定」「推量」「常識」は、意図ではない。
-> ✅ 定義が不十分な場合、停止または保留を優先する。
+This document exists at a higher level than IKDD specifications (v0.2, v0.3, ...) and Runtime implementation layers.
+All development and design decisions are premised on compliance with this policy.
 
 ---
 
-## 3. Structural Parity（構造等価性）
+## 1. Intent-First
 
-IKDDの構成要素である
-**Intent / State / Step** は、
-抽象度の異なる層であっても**意味的に等価**でなければならない。
+All design, implementation, and verification must be derived based on WHY (purpose) and WHAT (intent content).
+HOW (means) is derived information defined as a result.
 
-* Intent：目的と方向性（WHY/WHAT）
-* State：意図展開の中間形態（構造的意味場）
-* Step：実装・行動単位（HOW）
-
-> ✅ どの層にあっても「意図から派生した構造」である限り、同一系に属する。
-> ✅ StepがStateと整合しない場合、再構築を要する。
+> ✅ HOW without WHY/WHAT is considered "definition absent" in IKDD terms.
+> ✅ When WHY/WHAT changes, HOW is re-expanded.
 
 ---
 
-## 4. Constraint Supremacy（制約優先）
+## 2. No Assumption
 
-IKDDにおける **must / forbidden / keep / error** は、
-実装上の最適化や効率よりも優先される。
-これらは単なるルールではなく、**意図の倫理的境界**を示すものである。
+**Implicit inference and completion** in the implementation process is prohibited.
+Actions by AI or humans based on assumptions of undefined intent are considered errors in the IKDD system.
 
-> ✅ constraint は「構造上の安全装置」である。
-> ✅ 違反は警告ではなく「意味的破綻」として扱う。
-
----
-
-## 5. Reconstructability（再構築可能性）
-
-IKDDのあらゆる構造は、
-その状態（State, Step）から逆方向に
-**WHY/WHAT を再構築可能**でなければならない。
-これにより、時間を超えた意図の再現性を保証する。
-
-> ✅ 実装単体が再現不可能なものは、IKDD構造とは認められない。
-> ✅ 再構築の失敗は、意図の欠落または逸脱を意味する。
+> ✅ "Assumptions", "speculation", and "common sense" are not intent.
+> ✅ When definitions are insufficient, prioritize stopping or deferring.
 
 ---
 
-## 6. Human Trace（人間の痕跡）
+## 3. Structural Parity
 
-IKDDは、AIや自動生成系の補助を前提とするが、
-すべての意図には **人間の判断根拠** が残されなければならない。
-人間の関与なしに形成された意図は、IKDD構造としては未承認とする。
+The components of IKDD—**Intent / State / Step**—must be **semantically equivalent** even across different levels of abstraction.
 
-> ✅ AIは意図を展開できるが、意図を発生させてはならない。
-> ✅ 意図の発生点は常に「人間の目的」から始まる。
+* Intent: Purpose and direction (WHY/WHAT)
+* State: Intermediate form of intent expansion (structural semantic field)
+* Step: Implementation and action unit (HOW)
+
+> ✅ As long as they are "structures derived from intent," they belong to the same system regardless of layer.
+> ✅ When Step is inconsistent with State, reconstruction is required.
 
 ---
 
-## 7. Cognitive Boundary（認知境界：AI利用ポリシー）
+## 4. Constraint Supremacy
 
-IKDD において AI（LLM）は **推論者ではなく変換者である**。
+In IKDD, **must / forbidden / keep / error** take precedence over implementation optimization and efficiency.
+These are not mere rules but represent the **ethical boundaries of intent**.
 
-AIは「意図を生成・推測」してはならない。  
-AIは「意図を安全に変換する」ためにのみ利用される。
+> ✅ Constraints are "structural safety devices."
+> ✅ Violations are treated as "semantic collapse," not warnings.
 
-| レイヤー | AIの役割 | 許可 | 禁止 |
+---
+
+## 5. Reconstructability
+
+Every structure in IKDD must be **reconstructable to WHY/WHAT** in reverse from its state (State, Step).
+This ensures reproducibility of intent across time.
+
+> ✅ Implementations that cannot be reproduced standalone are not recognized as IKDD structures.
+> ✅ Failure to reconstruct indicates missing or deviated intent.
+
+---
+
+## 6. Human Trace
+
+While IKDD assumes AI and automated generation assistance, **human judgment basis** must remain in all intents.
+Intents formed without human involvement are considered unapproved as IKDD structures.
+
+> ✅ AI can expand intent but must not generate intent.
+> ✅ The origin point of intent always starts from "human purpose."
+
+---
+
+## 7. Cognitive Boundary (AI Usage Policy)
+
+In IKDD, AI (LLM) is **a transformer, not a reasoner**.
+
+AI must not "generate or infer intent."
+AI is used only to "safely transform intent."
+
+| Layer | AI Role | Permitted | Prohibited |
 |--------|--------|------|------|
-| v0.3 Intent Compiler | 自然言語 Intent → 構造化 State/Validation Model | ✅ 変換（構造化） | ❌ 推測 / ❌ 意図補完 |
-| v0.2 Runtime（展開） | State → 実装 / テスト生成 | ✅ 変換（展開） | ❌ HOWを創作 |
+| v0.3 Intent Compiler | Natural language Intent → Structured State/Validation Model | ✅ Transformation (structuring) | ❌ Inference / ❌ Intent completion |
+| v0.2 Runtime (expansion) | State → Implementation / Test generation | ✅ Transformation (expansion) | ❌ Creating HOW |
 
-Fallback規定：
+Fallback provision:
 
-> operator / knowledge が存在しない場合のみ、few-shot による一時的推論を許可する。  
-> 推論結果は恒久仕様に昇格しない（知識の道具化が完了したら破棄する）。
+> Temporary inference via few-shot is permitted only when operator / knowledge does not exist.
+> Inference results do not promote to permanent specifications (discarded once knowledge instrumentalization is complete).
 
-> **AIは意図を作らない。意図を壊さない。意図を変換するだけ。**
-
----
-
-## 8. Ethical Runtime（倫理的実行）
-
-IKDD Runtime は、上記の原則を実行時に継続的に検証しなければならない。
-実行中に発生する意図逸脱や不整合は、
-警告レベルを超えて倫理的例外として扱われる。
-
-> ✅ IKDD Runtime は「論理検証系」であると同時に「意図検証系」である。
-> ✅ 計算の成功よりも、意図の整合が優先される。
+> **AI does not create intent. AI does not break intent. AI only transforms intent.**
 
 ---
 
-## 9. Version Neutrality（バージョン中立）
+## 8. Ethical Runtime
 
-このポリシーは IKDD v0.1〜v∞ のすべてのバージョンに適用される。
-仕様の変更・スキーマの拡張が行われても、
-本ポリシーの精神的基底は不変である。
+IKDD Runtime must continuously verify the above principles during execution.
+Intent deviations and inconsistencies that occur during execution are treated as ethical exceptions beyond warning levels.
+
+> ✅ IKDD Runtime is both a "logical verification system" and an "intent verification system."
+> ✅ Intent consistency takes precedence over computational success.
 
 ---
 
-## 10. Unreachable Tolerance（到達不能の許容）
+## 9. Version Neutrality
 
-IKDD において「到達できない Intent」は **エラーではなく情報** である。
+This policy applies to all versions of IKDD from v0.1 to v∞.
+Even if specifications change or schemas expand, the spiritual foundation of this policy remains unchanged.
 
-実行不可能な Intent は、実装の欠陥ではなく、
-**意図と状態の不整合を示す診断結果**として扱われる。
+---
 
-### Precondition の役割
+## 10. Unreachable Tolerance
 
-Precondition が満たされない場合、
-IKDD Runtime は Intent を実行せず、**未充足の条件を返す**。
+In IKDD, an "unreachable Intent" is **information, not an error**.
 
-> ✅ Precondition == false → 実行中断 + 診断情報の返却
-> ✅ 実行しないことで、誤った状態遷移を防ぐ
+An Intent that cannot be executed is not a defect in implementation but a **diagnostic result indicating inconsistency between intent and state**.
 
-### DONE の役割
+### Role of Precondition
 
-DONE が満たされない場合、
-実行は「成功」とは見なされず、Before/After の差分と未達成状態を返す。
+When Precondition is not satisfied, IKDD Runtime does not execute the Intent and **returns unsatisfied conditions**.
 
-> ✅ DONE 未達成 → 差分情報の返却 + 再実行 or Intent 精製の促進
-> ✅ IKDD は **"成功しないことも収束"** と捉える
+> ✅ Precondition == false → Execution interrupted + Diagnostic information returned
+> ✅ Prevents incorrect state transitions by not executing
 
-### 期待される振る舞い
+### Role of DONE
 
-| 状態 | IKDD Runtime の動作 |
+When DONE is not satisfied, execution is not considered "successful," and returns the Before/After difference and unachieved state.
+
+> ✅ DONE unachieved → Difference information returned + Re-execution or Intent refinement promoted
+> ✅ IKDD considers **"not succeeding is also convergence"**
+
+### Expected Behavior
+
+| State | IKDD Runtime Action |
 |------|----------------------|
-| `Precondition == false` | 実行を中断し、未充足条件を返す |
-| `DONE 未達成` | Before/After 差分を返し、再実行または Intent の精製を促す |
+| `Precondition == false` | Interrupt execution and return unsatisfied conditions |
+| `DONE unachieved` | Return Before/After difference and promote re-execution or Intent refinement |
 
-Intent の誤りや前提不足を、実装ではなく **状態** として可視化することが、
-IKDD における到達不能の扱いである。
+Visualizing intent errors and prerequisite shortages as **state** rather than implementation is IKDD's handling of unreachability.
 
 ---
 
-## 11. Fixed Point Convergence（固定点収束）
+## 11. Fixed Point Convergence
 
-IKDD Runtime は、Intent の実行後、
-**状態が固定点（Fixed Point）へ収束する** ことを保証する。
+After executing an Intent, IKDD Runtime ensures that **state converges to a Fixed Point**.
 
-### 固定点の判定条件
+### Fixed Point Determination Conditions
 
-1. **不変量（Invariant）**
-   実行前後で変化してはならない値
-   例: `Before.WorldTransform == After.WorldTransform`
+1. **Invariant**
+   Values that must not change before and after execution
+   Example: `Before.WorldTransform == After.WorldTransform`
 
-2. **正規化（Canonicalization）**
-   比較可能な形へ丸め、順序や命名規則を統一する
-   例: 浮動小数の丸め（ε = 1e-6）、名称正規化
+2. **Canonicalization**
+   Rounding to comparable form, unifying order and naming conventions
+   Example: Floating-point rounding (ε = 1e-6), name normalization
 
-3. **冪等性（Idempotence）**
-   同じ Intent を複数回実行しても結果が変わらない
+3. **Idempotence**
+   Results do not change even if the same Intent is executed multiple times
 
-### 固定点の定義
+### Fixed Point Definition
 
 ```
 Runtime(Intent) == Runtime(Runtime(Intent))
 ```
 
-> ✅ IKDD は **"正しい手順" ではなく "正しい状態" に収束する**。
+> ✅ IKDD converges to **"correct state," not "correct procedure."**
 
-### Runtime 内部に許可される調整
+### Adjustments Permitted within Runtime
 
-* 修復（Repair）
-* 再評価（Re-evaluate）
-* ロールバック（Rollback）
+* Repair
+* Re-evaluate
+* Rollback
 
-これらは収束を保証するために、
-Runtime が内部的に行う補正動作であり、
-意図の変更や推測には該当しない。
+These are corrective actions performed internally by Runtime to ensure convergence and do not constitute intent modification or inference.
 
 ---
 
-## 付記：IKDDが守るもの
+## Postscript: What IKDD Protects
 
-* 推測よりも、意図を守る
-* 効率よりも、整合を守る
-* 自動化よりも、判断の痕跡を守る
-
----
-
-> **IKDDは「意図のための技術」であり、「技術のための意図」ではない。**
-> この原則に反する構造は、どれほど動作してもIKDDとは呼ばれない。
+* Protects intent over inference
+* Protects consistency over efficiency
+* Protects traces of judgment over automation
 
 ---
 
-## Appendix A. 定義を増やさないためのチェックリスト
-
-IKDD は **定義を増やす手法ではない**。
-定義が増えた場合は **抽象に戻す（精製する）**。
-
-### Intent チェック（3秒）
-
-- [ ] HOW が混ざっていないか？
-- [ ] WHY / WHAT が 2行以内で表現されているか？
-
-### Precondition チェック
-
-- [ ] 実行不能を防ぐ最小条件だけか？（5項以内）
-- [ ] 条件が増えている理由は Intent の細分化ではないか？
-
-### DONE チェック
-
-- [ ] 状態（Before/After）だけで判定可能か？
-- [ ] 手順や UI の条件が混ざっていないか？
-- [ ] 項目数は 1〜3 以内に収まっているか？
-
-> **定義が増殖したら削る勇気を持つ。**
+> **IKDD is "technology for intent," not "intent for technology."**
+> Structures that contradict this principle are not called IKDD, no matter how operational.
 
 ---
 
-## Appendix B. 用語集（Glossary）
+## Appendix A. Checklist to Avoid Proliferating Definitions
 
-| 用語 | 意味 |
+IKDD is **not a methodology for proliferating definitions**.
+When definitions proliferate, **return to abstraction (refine)**.
+
+### Intent Check (3 seconds)
+
+- [ ] Is HOW mixed in?
+- [ ] Can WHY / WHAT be expressed in 2 lines or less?
+
+### Precondition Check
+
+- [ ] Only minimal conditions to prevent unexecutable scenarios? (Within 5 items)
+- [ ] Is the reason for increasing conditions Intent subdivision?
+
+### DONE Check
+
+- [ ] Can it be determined by state (Before/After) alone?
+- [ ] Are procedures or UI conditions mixed in?
+- [ ] Does the number of items stay within 1-3?
+
+> **Have the courage to reduce when definitions proliferate.**
+
+---
+
+## Appendix B. Glossary
+
+| Term | Meaning |
 |------|------|
-| **Intent** | WHY / WHAT。目的（状態）であり HOW を含めない。 |
-| **Precondition** | 実行前に満たす必要がある最小条件。 |
-| **DONE** | 成功状態。Before/After が一致する固定点。 |
-| **固定点（Fixed Point）** | 繰り返しても状態が変わらない収束点。 |
-| **不変量（Invariant）** | Intent 実行中に変化してはいけない値。 |
-| **冪等性（Idempotence）** | 同一 Intent を再実行しても結果が変わらない性質。 |
-| **State** | Intent の構造的展開形態。意図を意味場として表現したもの。 |
-| **Step** | 具体的な実装・行動単位。HOW に相当。 |
+| **Intent** | WHY / WHAT. Purpose (state) and does not include HOW. |
+| **Precondition** | Minimum conditions that must be satisfied before execution. |
+| **DONE** | Success state. Fixed point where Before/After match. |
+| **Fixed Point** | Convergence point where state does not change upon repetition. |
+| **Invariant** | Values that must not change during Intent execution. |
+| **Idempotence** | Property where re-executing the same Intent does not change results. |
+| **State** | Structural expansion form of Intent. Intent expressed as a semantic field. |
+| **Step** | Concrete implementation and action unit. Corresponds to HOW. |
 
 ---
