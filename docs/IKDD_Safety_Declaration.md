@@ -1,6 +1,6 @@
 # 📄 IKDD / IntentOS Safety Declaration
 
-**（意図駆動開発における安全原則と利用ガイドライン）**
+**(Safety Principles and Usage Guidelines in Intent-Driven Development)**
 
 **Version:** 2025-11-09
 **Author:** Shouichi Kanbara (pikovolt)
@@ -8,108 +8,104 @@
 
 ---
 
-# ■ はじめに
+# ■ Introduction
 
-IKDD / IntentOS は、
+IKDD / IntentOS is
 
-> **"WHAT（意図・目的）を書き、HOW（実装）から人を解放する"**
+> **a framework "to write WHAT (intent/purpose) and free people from HOW (implementation)".**
 
-ためのフレームワークです。
-
-ただし、この強力さゆえに、**誤用されると重大な失敗を引き起こします。**
-本ドキュメントは、IntentOS を **安全に利用するための原則**を宣言したものです。
+However, due to this power, **misuse can lead to serious failures.**
+This document declares **principles for safely using IntentOS**.
 
 ---
 
-# 1. 危険性:IntentOS は「魔法の自動設計ツール」ではない
+# 1. Danger: IntentOS Is Not a "Magical Automatic Design Tool"
 
-IntentOS の誤用で最も危険なのは、この誤解です:
+The most dangerous misunderstanding of IntentOS is this:
 
-> ❌「実装知識なしで、仕様決めも設計も全部できる」
+> ❌ "Can do specification decisions and design without implementation knowledge"
 
-これは **完全に誤った理解**です。
+This is a **completely wrong understanding**.
 
-IntentOS が提供するのは **手順や実装の代行ではなく、意図を明確化するサポート** です。
-
----
-
-# 2. IntentOS の利用責任
-
-Intentを記述する人（Intent Writer）は、
-
-> **意図（WHAT）に責任を持つ**
-
-必要があります。
-
-IntentOS は、
-
-* 判断を肩代わりするものではなく、
-* 判断すべき箇所を**逃げられない形で可視化するもの**です。
+What IntentOS provides is **support for clarifying intent, not proxy for procedures or implementation**.
 
 ---
 
-# 3. ガードレール（安全装置）
+# 2. Usage Responsibility of IntentOS
 
-IntentOS は、誤用による失敗を防ぐために
-**構造的に曖昧なまま次の工程へ進まない仕組み**を持っています。
+The Intent Writer (person describing Intent) must
 
-| 機能                          | 効果                  |
+> **take responsibility for intent (WHAT)**.
+
+IntentOS is
+
+* Not a substitute for judgment,
+* Something that **visualizes where judgment should be made in an inescapable form**.
+
+---
+
+# 3. Guardrails (Safety Devices)
+
+To prevent failure from misuse, IntentOS has
+**mechanisms that structurally prevent proceeding to the next phase with ambiguity**.
+
+| Feature                          | Effect                  |
 | --------------------------- | ------------------- |
-| **TBD（未決定項目の抽出）**           | 曖昧さを内部に残さず外部に露出させる  |
-| **must / forbidden / keep** | HOWに踏み込まない条件定義を強制する |
-| **Done**                    | 完成の客観的状態のみを宣言する     |
-| **GAPS（不足情報の列挙）**           | 「知らなかった」を許容しない      |
+| **TBD (Extract undecided items)**           | Expose ambiguity externally, not internally  |
+| **must / forbidden / keep** | Force condition definition without stepping into HOW |
+| **Done**                    | Declare only objective state of completion     |
+| **GAPS (List missing information)**           | Don't tolerate "didn't know"      |
 
-**曖昧な Intent を "進める" ことはしません。**
-
----
-
-# 4. IntentOS を使うときの「禁止事項」
-
-以下は禁止です:
-
-❌ HOW（手順）を書くこと
-❌ 「分からないがとりあえず決める」を黙って通すこと
-❌ TBD や GAPS を残したまま実装へ投げること
-
-IntentOS は **曖昧な仕様書を書かないように設計されています**。
+**Never "advances" ambiguous Intent.**
 
 ---
 
-# 5. IntentOS の範囲と限界
+# 4. "Prohibited Actions" When Using IntentOS
 
-IntentOS ができること:
+The following are prohibited:
 
-✅ WHAT を構造化して書く
-✅ 曖昧な点を抽出する
-✅ 漏れのない要件を生成する
+❌ Writing HOW (procedures)
+❌ Silently passing "decide without knowing"
+❌ Throwing to implementation with TBD or GAPS remaining
 
-IntentOS が **できないこと**:
-
-❌ HOW（実装）を決める
-❌ 判断すべきことを勝手に決める
-❌ 責任を負う
-
-IntentOS は **設計者の判断を補助する**
-→ **代替ではない**
+IntentOS is **designed not to write ambiguous specifications**.
 
 ---
 
-# 6. 安全利用ポリシー（Safe Use Policy）
+# 5. Scope and Limitations of IntentOS
+
+What IntentOS can do:
+
+✅ Structurally write WHAT
+✅ Extract ambiguities
+✅ Generate complete requirements
+
+What IntentOS **cannot do**:
+
+❌ Decide HOW (implementation)
+❌ Decide on its own what should be judged
+❌ Take responsibility
+
+IntentOS **assists designer's judgment**
+→ **Not a substitute**
+
+---
+
+# 6. Safe Use Policy
 
 ```
-1. WHAT に責任を持てる人が Intent を書くこと。
-2. HOW を Intent に書かないこと。
-3. TBD/GAPS が残っている状態で実装へ渡さないこと。
-4. 最終的な判断は必ず人間が行うこと。
+1. People who can take responsibility for WHAT should write Intent.
+2. Don't write HOW in Intent.
+3. Don't hand to implementation with TBD/GAPS remaining.
+4. Final judgment must always be made by humans.
 ```
 
-IntentOS は民主化を促すが、**無責任を許容しない。**
+IntentOS promotes democratization but **doesn't tolerate irresponsibility.**
 
 ---
 
-# 7. IntentOS の本質
+# 7. Essence of IntentOS
 
-> IntentOS は「考えなくても作れるツール」ではない。
+> IntentOS is not a "tool to create without thinking".
 
-> **「考えるべきことに集中するための OS」である。**
+> **It is an "OS to concentrate on what should be thought about".**

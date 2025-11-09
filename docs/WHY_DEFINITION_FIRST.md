@@ -1,154 +1,154 @@
 # WHY_DEFINITION_FIRST.md
 
-**なぜ IKDD は「定義を先に書く」のか？（Definition-First の意義）**
+**Why IKDD Writes "Definitions First"? (Significance of Definition-First)**
 
 ---
 
-## 0. 結論（最初に）
+## 0. Conclusion (First)
 
-> **コードは生成物。定義が一次情報（Single Source of Truth）。**
+> **Code is a product. Definitions are the Single Source of Truth.**
 
-IKDD の目的は、
+IKDD's purpose is:
 
-> **「コードを書く」ではなく「変更に強い構造を作る」こと。**
+> **Not to "write code" but to "create structures resilient to change".**
 
-短期では実装主導（Implementation-first）が速い。
-しかし、
+In the short term, Implementation-first is faster.
+However,
 
-> **変更・再利用・引き継ぎ・複数ターゲット生成** が入ると
-> 定義が一次情報である「Definition-first」が圧倒的に強くなる。
+> When **changes, reuse, handovers, and multi-target generation** are involved,
+> Definition-first where definitions are the primary information becomes overwhelmingly stronger.
 
 ---
 
-## 1. 現実世界の課題
+## 1. Real-World Challenges
 
-ソフトウェア開発では、**コードの寿命より変更の寿命が長い。**
+In software development, **changes outlive code.**
 
-| フェーズ | 経験的に起こること          |
+| Phase | What Typically Happens          |
 | ---- | ------------------ |
-| 実装   | 必要なコードはすぐ書ける       |
-| 保守   | 要件変更が発生する          |
-| 拡張   | コードが複雑化し、意図が読めなくなる |
-| 引継   | 「この実装、なんでこうしてる？」問題 |
+| Implementation   | Code that's needed can be written quickly       |
+| Maintenance   | Requirement changes occur          |
+| Extension   | Code becomes complex and intent becomes unreadable |
+| Handover   | "Why was this implemented like this?" problem |
 
-要するに、
+In other words,
 
-> **"書く"より "直す" と "説明する"方が難しい。**
-
----
-
-## 2. 実装主導（Implementation-first）の特徴
-
-```
-仕様 → コード
-```
-
-* 意図がコードに埋もれる
-* コードを読まなければ理解できない
-* 修正が波及する（バタフライ効果）
-* 生成AIを使っても **コードは一度きりの成果物**
-
-> **実装主導はスピードは速いが、蓄積ができない。**
+> **"Modifying" and "explaining" are harder than "writing".**
 
 ---
 
-## 3. Definition-first（IKDD）のアプローチ
+## 2. Characteristics of Implementation-First
 
 ```
-意図 / 目的 / 制約（must / forbidden / keep）
+Specification → Code
+```
+
+* Intent is buried in code
+* Cannot be understood without reading code
+* Modifications propagate (butterfly effect)
+* Even using generative AI, **code is a one-time product**
+
+> **Implementation-first is fast but cannot accumulate.**
+
+---
+
+## 3. Definition-First (IKDD) Approach
+
+```
+Intent / Purpose / Constraints (must / forbidden / keep)
         ↓
-      定義
+      Definition
         ↓
-    行動（生成 / 実装 / 実行）
+    Action (Generation / Implementation / Execution)
 ```
 
-* **意図を定義として残す**
-* 実装は「定義の結果として生成」される
-* 変更は「定義の変更」として扱える
+* **Keep intent as definition**
+* Implementation is "generated as a result of definition"
+* Changes can be treated as "definition changes"
 
-> **定義を変えれば、すべてが再生成される。**
-
----
-
-## 4. 何が嬉しいのか（価値）
-
-### ✅ 一貫性
-
-定義 = Single Source of Truth
-複数実装への反映がズレない。
-
-例：
-
-* CLI / API / プラグイン / DCC ツール 等 **複数ターゲット生成**
+> **If you change the definition, everything is regenerated.**
 
 ---
 
-### ✅ トレーサビリティ
+## 4. What's Good About It (Value)
 
-「この動作はどの must / forbidden / keep によるもの？」が追跡できる。
+### ✅ Consistency
 
----
+Definition = Single Source of Truth
+No discrepancy when reflected in multiple implementations.
 
-### ✅ 再利用性
+Example:
 
-定義（tool / knowledge / constraint）が独立して再利用できる。
-
----
-
-### ✅ 認知負荷の低減
-
-コード全体を読まなくていい。
-**「意図を見る」だけで把握できる。**
+* CLI / API / Plugin / DCC tools, etc. **Multi-target generation**
 
 ---
 
-## 5. Definition-first が勝つ場面
+### ✅ Traceability
 
-| ケース         | Implementation-first | Definition-first |
+"Which must / forbidden / keep causes this behavior?" can be traced.
+
+---
+
+### ✅ Reusability
+
+Definitions (tool / knowledge / constraint) can be reused independently.
+
+---
+
+### ✅ Reduced Cognitive Load
+
+Don't need to read all code.
+**Just "look at intent" to grasp.**
+
+---
+
+## 5. Where Definition-First Wins
+
+| Case         | Implementation-first | Definition-first |
 | ----------- | -------------------- | ---------------- |
-| 単発 / 短命     | ✅ 最速                 | ❌ 過剰             |
-| 継続保守 / 要件変更 | ❌ 重い                 | ✅ 変更が局所          |
-| 複数実装 / 横展開  | ❌ 同期が地獄              | ✅ 定義1つで全展開       |
-| 他者への引き継ぎ    | ❌ コード読解              | ✅ 定義を読むだけ        |
+| One-off / Short-lived     | ✅ Fastest                 | ❌ Overkill             |
+| Continuous maintenance / Requirement changes | ❌ Heavy                 | ✅ Changes are localized          |
+| Multiple implementations / Horizontal deployment  | ❌ Synchronization nightmare              | ✅ Full deployment with one definition       |
+| Handover to others    | ❌ Code comprehension              | ✅ Just read the definition        |
 
-> **長期戦 / 多面展開 / 引き継ぎ が前提の場合、Definition-first が勝つ。**
-
----
-
-## 6. IKDD のミッション
-
-> **コードではなく「意図」を資産化する。
-> 人による実装ではなく、定義に基づく自動生成に寄せる。**
+> **When long-term, multi-faceted deployment, and handover are assumed, Definition-first wins.**
 
 ---
 
-## 7. IKDD Runtime が保証すること
+## 6. IKDD's Mission
 
-| Runtime が担保するもの | 意味                              |
+> **Turn intent, not code, into assets.
+> Shift toward auto-generation based on definitions rather than implementation by humans.**
+
+---
+
+## 7. What IKDD Runtime Guarantees
+
+| What Runtime Guarantees | Meaning                              |
 | --------------- | ------------------------------- |
-| 再現性             | 同じ定義 → 同じ生成結果                   |
-| 一貫性             | 複数の実装に同期                        |
-| トレーサビリティ        | 「どの定義が効いているか」がわかる               |
-| 検証性 (v0.3〜)     | Lint / Type / Constraint / Test |
+| Reproducibility             | Same definition → Same generated result                   |
+| Consistency             | Synchronize to multiple implementations                        |
+| Traceability        | "Which definition is in effect?" can be understood               |
+| Verifiability (v0.3~)     | Lint / Type / Constraint / Test |
 
 ---
 
-## 8. スローガン
+## 8. Slogan
 
 ```
-コードは消費するもの。
-定義は残すもの。
+Code is consumed.
+Definitions are kept.
 ```
 
 ---
 
-## 9. まとめ
+## 9. Summary
 
-|        | 実装主導     | Definition-first（IKDD） |
+|        | Implementation-driven     | Definition-first (IKDD) |
 | ------ | -------- | ---------------------- |
-| 目的     | 動くコードを書く | **意図を残す / 資産化**        |
-| 価値     | 一時的      | 永続的                    |
-| アウトプット | ソースコード   | **定義（←一次情報）**          |
-| 人の役割   | 書く人      | **意図を定義する人**           |
+| Purpose     | Write working code | **Keep intent / Turn into assets**        |
+| Value     | Temporary      | Persistent                    |
+| Output | Source code   | **Definition (← Primary information)**          |
+| Human role   | Writer      | **Intent definer**           |
 
 ---

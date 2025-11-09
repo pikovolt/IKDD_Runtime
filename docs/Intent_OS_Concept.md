@@ -1,148 +1,146 @@
-# **Intent OS — 概念定義（Definition Document）**
+# **Intent OS — Concept Definition (Definition Document)**
 
-## 1. 目的（Purpose）
+## 1. Purpose
 
-**Intent OS** は、ユーザが記述した *Intent（意図・目的）* を最上位の入力とし、
-その Intent を満たすためにシステムが必要な処理・実装・実行を選択／生成／組み立てするための **実行環境（Runtime Model）** である。
-
----
-
-## 2. 核となる前提（Core Assumptions）
-
-1. **Intent は最上位の実行単位である。**
-   　ユーザは「どう実現するか HOW」ではなく「何を実現したいか WHAT / WHY」を記述する。
-
-2. **状態（State）と成果（Done）が中心である。**
-   　Intent に対して「実行後の世界がどうなっていればよいか」を定義することで、
-   　手順ではなく **結果** を指定する。
-
-3. **実装は交換可能な副産物である。**
-   　Intent を満たせるなら、どの言語／どの手段で実装されてもよい。
-
-> OS が "デバイスドライバ" を抽象化するように、Intent OS は "実装手段" を抽象化する。
+**Intent OS** is a **runtime environment (Runtime Model)** that takes *Intent (intent/purpose)* described by users as the highest-level input and selects/generates/assembles the necessary processing, implementation, and execution to satisfy that Intent.
 
 ---
 
-## 3. 構成要素（Conceptual Components）
+## 2. Core Assumptions
 
-| 要素                            | 役割                                  | 性質             |
+1. **Intent is the highest execution unit.**
+   Users describe "what to achieve WHAT / WHY", not "how to achieve it HOW".
+
+2. **State and Done are central.**
+   By defining "what the world should look like after execution" for Intent,
+   you specify **results**, not procedures.
+
+3. **Implementation is a replaceable by-product.**
+   As long as Intent is satisfied, any language/means of implementation is acceptable.
+
+> Just as OS abstracts "device drivers", Intent OS abstracts "implementation means".
+
+---
+
+## 3. Conceptual Components
+
+| Component                            | Role                                  | Nature             |
 | ----------------------------- | ----------------------------------- | -------------- |
-| **Intent**                    | 実現したい目的（WHAT/WHY）                   | 不変（バージョン管理される） |
-| **Done**                      | Intent が満たされたことを示す結果状態の条件           | 目的の評価基準        |
-| **World State（Before/After）** | 実行前後の観測可能な状態                        | 判定データ          |
-| **Knowledge Module**          | システムが利用可能なHOWの断片（選択肢）               | 交換可能・増減可能      |
-| **Executor / Planner**        | Intent + Done + Knowledge から実行手順を構築 | 動的             |
+| **Intent**                    | Purpose to achieve (WHAT/WHY)                   | Immutable (version controlled) |
+| **Done**                      | Resulting state conditions that show Intent is satisfied           | Evaluation criterion of purpose        |
+| **World State (Before/After)** | Observable state before and after execution                        | Judgment data          |
+| **Knowledge Module**          | HOW fragments (choices) available to the system               | Replaceable, extendable      |
+| **Executor / Planner**        | Builds execution procedure from Intent + Done + Knowledge | Dynamic             |
 
 ---
 
-## 4. 動作モデル（Behavior Model）
+## 4. Behavior Model
 
-Intent OS は以下の処理サイクルで動作する：
+Intent OS operates with the following processing cycle:
 
 ```
-1. Intent を入力として受け取る（WHAT / WHY）
-2. DONE 条件を基準に、最終状態を評価可能にする（State-based）
-3. Knowledge（HOW候補）から、最適な経路 / 実装 / 手順を選択 or 生成
-4. 実行
-5. 実行後の状態を評価し、DONE 満足まで繰り返す
+1. Receives Intent as input (WHAT / WHY)
+2. Makes final state evaluable based on DONE conditions (State-based)
+3. Selects or generates optimal path / implementation / procedure from Knowledge (HOW candidates)
+4. Execute
+5. Evaluate post-execution state and repeat until DONE is satisfied
 ```
 
-※ Intent OS のゴールは **「Intent を満たすまで世界を調整し続けること」**。
+※ Intent OS's goal is **"to keep adjusting the world until Intent is satisfied"**.
 
 ---
 
-## 5. 特徴（Properties）
+## 5. Properties
 
-| 特徴                          | 説明                                |
+| Property                          | Description                                |
 | --------------------------- | --------------------------------- |
-| **Declarative**             | WHAT / WHY の宣言のみで動作する             |
-| **State-driven**            | 結果状態（Done）によって成功が決まる              |
-| **Implementation-agnostic** | 実装は内部で動的に決定・交換される                 |
-| **Reversible / Replayable** | Before/After の state により再実行・検証が可能 |
-| **Upgradable**              | Knowledge モジュール追加で能力向上する          |
+| **Declarative**             | Operates with only WHAT / WHY declarations             |
+| **State-driven**            | Success is determined by result state (Done)              |
+| **Implementation-agnostic** | Implementation is dynamically determined/exchanged internally                 |
+| **Reversible / Replayable** | Re-execution and verification possible via Before/After state |
+| **Upgradable**              | Capability improvement through Knowledge module addition          |
 
 ---
 
-## 6. Intent OS が扱うもの／扱わないもの
+## 6. What Intent OS Handles / Doesn't Handle
 
-| 扱う                   | 扱わない               |
+| Handles                   | Doesn't Handle               |
 | -------------------- | ------------------ |
-| WHAT / WHY（目的）       | コード最適化、命令セットレベルの制御 |
-| DONE / 状態            | 個別 API の詳細         |
-| 世界状態（Before / After） | 設計者の感情・曖昧な表現       |
-| Knowledge（HOWの候補集合）  | HOW を直接書くこと        |
+| WHAT / WHY (Purpose)       | Code optimization, instruction set level control |
+| DONE / State            | Individual API details         |
+| World State (Before / After) | Designer's feelings, ambiguous expressions       |
+| Knowledge (HOW candidate set)  | Writing HOW directly        |
 
-Intent OS は **意図を保持し実装に依存しない**。
-
----
-
-## 7. ゴール（Success Definition）
-
-> **Intent が DONE 条件を通じて満たされ、
-> 世界状態が安定して再現可能になったとき、Intent OS は成功とみなす。**
+Intent OS **holds intent and does not depend on implementation**.
 
 ---
 
-## 8. Intent OS と従来の OS の違い
+## 7. Goal (Success Definition)
 
-| 従来の OS              | Intent OS                      |
+> **When Intent is satisfied through DONE conditions and
+> world state becomes stable and reproducible, Intent OS considers it a success.**
+
+---
+
+## 8. Differences Between Intent OS and Traditional OS
+
+| Traditional OS              | Intent OS                      |
 | ------------------- | ------------------------------ |
-| プロセス（実行単位）を管理する     | Intent（目的）を管理する                |
-| CPU / メモリ / IO の抽象化 | 実装 / HOW / 手順の抽象化              |
-| プログラムを実行する          | Intent を満たす手段を選択 / 組み立て / 実行する |
+| Manages processes (execution units)     | Manages Intent (purpose)                |
+| Abstracts CPU / memory / IO | Abstracts implementation / HOW / procedures              |
+| Executes programs          | Selects / assembles / executes means to satisfy Intent |
 
 ---
 
-## 9. 解決する問題（Problem Statement）
+## 9. Problem Statement
 
-従来の自動化やコード生成では：
+In traditional automation and code generation:
 
-* Intent（目的）が実装に埋没しやすい
-* 実装が腐ると Intent が失われる
-* 実装変更が Intent を書き換えてしまう（逆依存）
+* Intent (purpose) tends to be buried in implementation
+* When implementation decays, Intent is lost
+* Implementation changes rewrite Intent (reverse dependency)
 
-Intent OS は、Intent と HOW の責務を分離する：
+Intent OS separates Intent and HOW responsibilities:
 
-| レイヤ                    | 本質       | 状態         |
+| Layer                    | Essence       | State         |
 | ---------------------- | -------- | ---------- |
-| **Intent（WHAT / WHY）** | 永続する本体   | バージョン管理対象  |
-| **実装（HOW）**            | 捨てられる副産物 | いつでも差し替え可能 |
+| **Intent (WHAT / WHY)** | Persistent essence   | Version control target  |
+| **Implementation (HOW)**            | Discardable by-product | Replaceable anytime |
 
-Intent が **実装より上位になる**。
+Intent becomes **higher than implementation**.
 
 ---
 
-## 10. 入出力（I/O Model）
+## 10. I/O Model
 
 ```
 Input  = Intent + Done + WorldState(before) + Knowledge
-Output = 実装（code / process） + WorldState(after)
+Output = Implementation (code / process) + WorldState(after)
 ```
 
 ---
 
-## 11. 関連概念との差異（Difference from Related Concepts）
+## 11. Differences from Related Concepts
 
-Intent OS が対象とする「Intent（目的）」は **永続的な概念の本体** であり、
-生成される実装は **副産物として捨てられる／交換できる** 点に特徴がある。
+The "Intent (purpose)" that Intent OS targets is the **persistent conceptual essence**, with the distinguishing feature that generated implementation is a **by-product that can be discarded/replaced**.
 
-| 手法/概念                                                      | 共通点                  | Intent OS の独自性                                              |
+| Method/Concept                                                      | Common Ground                  | Intent OS Uniqueness                                              |
 | ---------------------------------------------------------- | -------------------- | ----------------------------------------------------------- |
-| **Declarative / Infrastructure as Code (Terraform / Nix)** | 状態を宣言し、差分で適用         | Intent（WHY）が無い。Intent の差分（Intent diff）が存在しない。実装は副産物ではなく成果物。 |
-| **AI Planning / GOAP / PDDL**                              | WHAT を出発点に HOW を生成する | Intent は一時的な入力であり、**永続されない**。実装を保持しない。Intent diff がない。      |
-| **Model Driven Development (MDD / Codegen)**               | 定義を元に自動生成する          | WHATではなく **構造モデル** が中心。生成物（コード）が成果物で、Intentは上位に存在しない。       |
-| **CI/CD / DevOps automation**                              | 実装を自動化する             | Intent（目的）を扱わない。Done条件が無い。                                  |
+| **Declarative / Infrastructure as Code (Terraform / Nix)** | Declares state and applies diffs         | No Intent (WHY). No Intent diff. Implementation is a deliverable, not a by-product. |
+| **AI Planning / GOAP / PDDL**                              | Generates HOW starting from WHAT | Intent is temporary input and **not persisted**. Doesn't hold implementation. No Intent diff.      |
+| **Model Driven Development (MDD / Codegen)**               | Auto-generates from definitions          | **Structural model**, not WHAT, is central. Generated code is deliverable, Intent doesn't exist at higher level.       |
+| **CI/CD / DevOps automation**                              | Automates implementation             | Doesn't handle Intent (purpose). No Done condition.                                  |
 
-Intent OS の本質：
+Essence of Intent OS:
 
-> Intent（WHAT/WHY） が永続し、
-> 実装（HOW）は **副産物 / 交換可能 / 破棄可能** である。
+> Intent (WHAT/WHY) persists,
+> Implementation (HOW) is a **by-product / replaceable / discardable**.
 
 ---
 
-## 最終的な一文の定義（Short Definition）
+## Final One-Sentence Definition (Short Definition)
 
-> **Intent OS は、意図を最上位の実行単位として扱い、
-> 状態ベースで DONE を満たすまで実装を生成・選択・実行するシステムである。**
+> **Intent OS is a system that treats intent as the highest execution unit
+> and generates, selects, and executes implementation until DONE is satisfied on a state basis.**
 
 ---
