@@ -12,6 +12,7 @@ flowchart LR
 
     subgraph Kernel
         DIR[Intent Registry]
+        DIFF[Intent-Diff Cascade]
         DNR[Done / State Rules]
         KREG[Knowledge Registry]
         PLAN[Planner]
@@ -32,7 +33,8 @@ flowchart LR
     DSpec --> DNR
     Ksnip --> KREG
 
-    DIR --> PLAN
+    DIR --> DIFF
+    DIFF --> PLAN
     DNR --> PLAN
     KREG --> PLAN
 
