@@ -1,6 +1,6 @@
-# RKD: Reusable Knowledge Design / Definition
+# RKD: **Reproducible Knowledge Design / Definition**
 
-> **A design method for "creating knowledge, not implementation"**
+> **A methodology for "designing reproducible knowledge, not implementation"**
 
 ---
 
@@ -8,46 +8,43 @@
 
 With IKDD and CDD:
 
-* Intent (WHY/WHAT) can be fixed
-* Inference deviation can also be prevented by CDD
+* Intent (WHY/WHAT) is fixed
+* Inference deviation is prevented
 
-However, *problems remain on the implementation (HOW) side*:
+However, **reproducibility of HOW-side knowledge** is not guaranteed.
 
-| Problem                     | Description                    |
-| ---------------------- | --------------------- |
-| Implementation keeps growing as Knowledge | Snippets become spaghetti    |
-| Modifications propagate to all Knowledge  | Worst case: "Code that was working stops working"   |
-| Reusability cannot be guaranteed            | Copy-paste → divergence → failure |
-
-> If **IKDD "fixes intent"**,
-> **RKD "makes knowledge reusable"**.
+| Problem                       | Description                                      |
+| ----------------------------- | ------------------------------------------------ |
+| Implementation proliferates   | Snippets become spaghetti                        |
+| Modifications propagate       | One change breaks other knowledge                |
+| No reproducibility guarantee  | Cannot guarantee "same input → same output"      |
 
 ---
 
 ## Core of RKD
 
-> **"Harvest knowledge," not "write code".**
+> **"Design reproducible knowledge," not "write code".**
 
 ```text
 Implementation (Code) = Consumable
-Knowledge = Asset
+Knowledge = Asset with reproducibility
 ```
 
-### ✅ IKDD deals with "implementation"
+### IKDD deals with Intent (WHAT)
 
-### ✅ RKD deals with "knowledge as definition"
+### RKD deals with **reproducible HOW knowledge**
 
 ---
 
 ## RKD Structure
 
-| File              | Role                                  |
-| ----------------- | ----------------------------------- |
-| `knowledge.yaml`  | Knowledge module definition / interface / invariants |
-| `versions/*.yaml` | Past versions of Knowledge (change history)            |
-| `snippets/*.py`   | Implementation reference (concrete examples of Knowledge)               |
+| File              | Role                                           |
+| ----------------- | ---------------------------------------------- |
+| `knowledge.yaml`  | Interface / invariant / reproducibility conditions |
+| `versions/*.yaml` | Past knowledge versions (history and fixed points) |
+| `snippets/*.py`   | Knowledge implementation examples (HOW proposals)  |
 
-#### Example of knowledge.yaml:
+Example:
 
 ```yaml
 knowledge:
@@ -56,106 +53,37 @@ knowledge:
     output: rows
     invariant:
       - "rows is list[dict]"
-    description: "Load CSV and convert to Python dict list"
+    reproducibility:
+      - "same csv_file → same rows (regardless of implementation)"
     version: "1.3.2"
 ```
 
-> **Knowledge = "Data transformation contract" + "Invariants that must not be broken"**
+> **Knowledge = Contract guaranteeing reproducibility + invariant**
 
 ---
 
-## RKD = Reusable + Versionable + Knowledge
-
-| IKDD      | CDD         | RKD            |
-| --------- | ----------- | -------------- |
-| Fix intent   | Fix context     | Fix knowledge        |
-| WHAT      | Context     | HOW knowledge        |
-| tool.yaml | constraints | knowledge.yaml |
-
----
-
-## Concept Added by RKD: **Knowledge Versioning**
+## IKDD / CDD / RKD Relationship
 
 ```
-knowledge/
-  CSV_LOAD/
-    v1.0.0.yaml
-    v1.3.2.yaml
-    v2.0.0.yaml
+┌──────── Intent (WHY/WHAT) ───────┐
+│               IKDD                │
+│         Fix intent                │
+└────────────┬─────────────────────┘
+             │ Context
+             ▼
+┌──────────── CDD ─────────────────┐
+│ Block inference, prevent deviation │
+└────────────┬─────────────────────┘
+             │ Knowledge (HOW)
+             ▼
+┌──────────── RKD ─────────────────┐
+│ Manage knowledge as reproducible asset │
+│ reproducibility / invariant / versioning │
+└───────────────────────────────────┘
 ```
-
-> Not "overwrite to latest" but **grow knowledge**.
-
----
-
-## Future RKD Realizes
-
-> **Intent (WHAT)** can change
-> **Context** is protected
-> **Knowledge** is grown
-
-| Before (Prompt / Coding) | After (IKDD + CDD + RKD) |
-| ------------------------ | ------------------------ |
-| Implementer worries                   | Context designer selects knowledge        |
-| Code is disposable                 | Knowledge accumulates         |
-| Implementation = labor                  | Knowledge = asset                  |
-
----
-
-## IKDD / CDD / RKD Relationship (Definitive Version)
-
-```
-┌──────────── Intent (WHY/WHAT) ────────────┐
-│                IKDD                        │
-│      Fix intent and separate HOW           │
-└──────────────┬─────────────────────────┘
-                │ Context (framework)
-                ▼
-┌──────────── CDD ────────────────────┐
-│  Constrain AI inference and prevent deviation           │
-│  must / forbidden / immutable           │
-└──────────────┬──────────────────────┘
-                │ Knowledge (HOW components)
-                ▼
-┌──────────── RKD ────────────────────┐
-│  Grow and reuse Knowledge as asset  │
-│  versioning / invariant / reuse         │
-└──────────────────────────────────────┘
-```
-
-**Intent → Context → Knowledge**
-This **unidirectional dominance relationship** eliminates wavering.
 
 ---
 
 ## One-Line Summary
 
-> **RKD = Methodology for "designing, growing, and reusing knowledge".**
-
-IKDD **writes WHAT**
-CDD **blocks inference**
-RKD **turns Knowledge into assets**
-
----
-
-## Document Replacement Template (If You Only Want to Add)
-
-```markdown
-## RKD: Reusable Knowledge Design / Definition
-
-If IKDD fixes intent (WHY/WHAT),
-and CDD blocks inference,
-
-> RKD "turns knowledge (HOW) into assets".
-
-### Purpose
-- Don't make Knowledge disposable
-- Make it versionable / invariant / reusable
-
-### Deliverables
-- `knowledge.yaml` (contract)
-- `versions/*.yaml` (history)
-- `snippets/*.py` (implementation examples)
-
-> Harvest knowledge, don't write code.
-```
+> **RKD = A design method for "giving reproducibility to HOW knowledge"**
