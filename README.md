@@ -203,6 +203,7 @@ knowledge:
 - [IKDD Safety Declaration](docs/IKDD_Safety_Declaration.md) - IntentOS安全利用のための原則と責任ガイドライン
 - [Intent OS Concept](docs/Intent_OS_Concept.md) - Intent OSの概念定義と実行モデル
 - [IKDD/CDD Concept](docs/CONCEPT_IKDD-CDD.md) - IKDD/CDDの概念と思想
+- [RKD Concept](docs/CONCEPT_RKD.md) - RKD（Reusable Knowledge Design）知識を資産化する設計手法
 - [IKDD Core Policy](docs/IKDD_CORE_POLICY.md) - IKDDの根源的理念と基本原則
 - [IKDD Tool Principles](docs/IKDD_TOOL_PRINCIPLES.md) - 知識の道具化とRuntime設計原則
 - [Why Definition-First?](docs/WHY_DEFINITION_FIRST.md) - なぜIKDDは「定義を先に書く」のか
