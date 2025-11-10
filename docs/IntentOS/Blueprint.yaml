@@ -1,0 +1,195 @@
+id: IntentOS_Blueprint
+version: 0.2r1
+author: Shouichi Kanbara (pikovolt)
+updated: 2025-11-10
+
+Intent: |
+  Intent OS の全体構造を定義する。
+  Intent（WHAT）を唯一の情報源とし、HOW（実装）は可変・再生成可能とする。
+  Diff Cascade により Intent の変化を検出・伝播し、
+  Planner が HOW を再構築、Runtime が実行・検証を行う。
+  Before/After 状態は State Store に記録され、Invariant によって整合が保証される。
+
+Context:
+  motivation:
+    - Intentを固定点とし、再現性と追跡可能性を担保する OS 構造を確立する。
+    - HOW の揺らぎを吸収し、Intent の意味的安定性（Semantic Stability）を保証する。
+    - 「Intent → Diff → Plan → Execute → Validate → Feedback」という再帰的サイクルを持つ Kernel–Runtime 構造を確立する。
+
+Scope:
+  include:
+    Kernel:
+      - Intent Registry
+      - Diff Engine / Diff Cascade
+      - Planner
+      - Capability / Policy Resolver
+      - State Store (Before / After)
+      - Invariant Evaluator
+      - FixedPrinciple (immutable ruleset)
+    Runtime:
+      - Executor
+      - Validator / Asserter
+      - Domain Driver / Adapter
+      - World-State Adapter
+  exclude:
+    - HOW（実装・スクリプト）の記述
+    - DCC / UI デザイン
+    - 外部サービス連携の詳細
+
+Kernel:
+  overview: |
+    Kernel は「WHAT層」の中核であり、Intent の定義・比較・変化検出・再計画を担う。
+    Diff Cascade により Intent の更新イベントを階層的に伝播し、
+    Planner がそれに基づく HOW 再構築を行う。
+    結果は Runtime 層に送られ、実行後に State Store に Before/After が記録される。
+
+  components:
+    - name: Intent Registry
+      role: Intent（WHAT）を一意に識別し、永続化・履歴管理を行う。
+      output: IntentRecord(UUID, version, timestamp, author)
+
+    - name: Diff Engine / Diff Cascade
+      role: |
+        IntentRecord 間の差分を解析し、変更の意味論的構造を生成する。
+        差分には３種がある：
+          1. Structural Diff（構造差）
+          2. Semantic Diff（意味差）
+          3. Invariant Diff（整合差）
+        Diff Cascade はこれらを階層的に適用し、関連Intentに影響を伝播する。
+      output: DiffBundle { base_id, new_id, changes[], impact[], cascade_depth }
+
+    - name: Planner
+      role: |
+        DiffBundle を受け取り、実行可能な HOW プランを再構築する。
+        Intent → PlanRequest(JSON) → ExecutionPlan(YAML) の形式でやり取りを行う。
+      interface:
+        PlanRequest:
+          type: JSON
+          fields:
+            - intent_id: string
+            - diff_ref: string
+            - policy_context: string
+            - capability_scope: string
+        ExecutionPlan:
+          type: YAML
+          fields:
+            - plan_id: string
+            - actions: list
+            - rollback: list
+            - validation_hooks: list
+            - expected_invariants: list
+
+    - name: Capability / Policy Resolver
+      role: Intent 実行の許可・制約を解決し、Planner に渡す。
+      input: Intent metadata + system policy
+      output: CapabilityContext(policy_allow, must, forbidden)
+
+    - name: State Store
+      role: |
+        Intent 実行前後の状態を保存し、Invariant評価のための基礎データを提供する。
+        Before / After / Delta の３層構造で管理。
+      schema:
+        Before:
+          - snapshot_id
+          - timestamp
+          - entity_state
+        After:
+          - snapshot_id
+          - timestamp
+          - entity_state
+        Delta:
+          - diff_ref
+          - invariants_passed
+          - anomalies_detected
+
+    - name: Invariant Evaluator
+      role: |
+        State Store の Before/After を比較し、Intent 定義に基づく Invariant を評価する。
+        評価結果は Validator に渡される。
+      output: ValidationReport(pass_rate, fail_list, recovery_plan)
+
+Runtime:
+  overview: |
+    Runtime は HOW 実行と評価を担う層であり、Kernel が生成した ExecutionPlan を実際に適用する。
+    実行の結果は Validator により検証され、State Store にフィードバックされる。
+
+  components:
+    - name: Executor
+      role: ExecutionPlan に基づき、コード／スクリプト／外部プロセスを実行する。
+      contract:
+        - UndoTransaction: 実行境界の巻き戻しを保証する。
+        - NoSideEffect: 未指定モデルへの副作用禁止。
+        - Logging: 実行履歴を Kernel へ通知。
+
+    - name: Validator / Asserter
+      role: 実行結果を InvariantEvaluator の出力と照合し、Done / NotDone / Pending を判定する。
+      output: ValidationState { done: bool, pending_reason: string, violations[] }
+
+    - name: Domain Driver / Adapter
+      role: Intent と実行対象（例: DCC, DB, CLI）を接続する。
+      note: Domain固有の実装はここで完結し、Kernelに影響を与えない。
+
+    - name: World-State Adapter
+      role: 実行環境（3D Scene, Database, Filesystemなど）の現在状態をスナップショット化し、State Storeに送信する。
+
+Relation:
+  execution_cycle: |
+    Intent (WHAT)
+      ↓
+    Diff Detection → Diff Cascade
+      ↓
+    Planner Re-evaluation (PlanRequest → ExecutionPlan)
+      ↓
+    Runtime Execution (Executor / Driver)
+      ↓
+    Validator & InvariantEvaluator
+      ↓
+    State Store (Before/After/Delta)
+      ↓
+    Feedback → Intent Registry Update (新バージョン登録)
+
+Invariant:
+  universal_rules:
+    - rule: Before.WorldState == After.WorldState if Intent.type == "InsertNullAsParent"
+    - rule: Unrelated entities must not change
+    - rule: UndoTransaction must restore exact Before snapshot
+    - rule: Validation must emit deterministic pass/fail under identical Intent
+
+Done:
+  - Intent の更新が Diff Cascade により正しく伝播している。
+  - Planner が ExecutionPlan を再構築し、Runtime 実行後に State Store が更新される。
+  - InvariantEvaluator により整合が確認され、ValidationState が "done: true" となる。
+
+FixedPrinciple:
+  description: |
+    Intent OS Kernel に固定される不変層。
+    Intent 定義の原則・決定・未解決項目を格納し、
+    すべてのバージョン間で継承される。
+    この層は Intent OS における永続的な基準点（Fixed Point）として機能し、
+    Kernel 外からの変更を禁止する。
+
+  decisions:
+    - Kernel / Runtime / Diff Cascade の責務区分は v0.2 で確定。
+      → Kernel = WHAT層, Runtime = HOW層, Diff Cascade = Kernel所属。
+    - Diff Cascade は Structural / Semantic / Invariant の３種に分類し、cascade_depth により伝播範囲を制御。
+    - 再現性は State Store + InvariantEvaluator により保証される構造とする。
+
+  unresolved:
+    - Diff Cascade の時系列的整合性（複数Intentの同時更新・競合解決モデル）は未定義。
+      → v0.3 で formal schema (Branch/Mergeモデル) を策定予定。
+    - InvariantEvaluator の実行結果に対する再試行ルール（NotDone/Pending の扱い）は未定義。
+      → v0.3 で Proof of Determinism / RetryPolicy を導入予定。
+
+  retention_policy: fixed
+  inherited_by: all future versions
+  internal_alias: "IntentOS Principia"
+  comment: |
+    FixedPrinciple は Intent OS の全バージョンを通じて維持される「定義の不動層」である。
+    IntentやHOWが変化しても、この層の原則に基づき整合性が検証される。
+    内部的には "IntentOS Principia" として Kernelモジュール内で参照される。
+
+Meta:
+  status: revised
+  compatibility: v0.2 upward compatible
+  revision: "r1 (renamed Notes → FixedPrinciple)"
+  license: Public concept – shareable with citation.
