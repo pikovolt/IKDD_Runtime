@@ -22,36 +22,41 @@ IKDD_RuleSet:
   id: IKDD_UNIFIED_RULESET
   version: 0.4
   description: >
-    Unified rule set that combines Intent OS (WHAT generation) and
-    IKDD Universal Rule (HOW derivation) to deterministically derive
-    Implementation from Intent.
+    Intent OS（WHAT生成層）と Universal IKDD Rule（HOW導出層）を統合した、
+    Intent → Implementation を一意に導出するためのルールセット。
 
   phases:
     - phase: IntentOS
-      focus: "Decide WHAT / Discover Intent (do not touch HOW)"
+      focus: "WHAT を決める / Intent を発見・明確化する（HOW に触れない）"
     - phase: IKDD_Universal
-      focus: "Derive Implementation from HOW × Knowledge"
+      focus: "Intent から HOW を導出し、Knowledge を適用して Implementation を生成する"
 
+  # ==========================================================
+  # 1. Intent OS Rules (WHAT generation / Intent discovery)
+  # ==========================================================
   IntentOS:
-    input: "Ambiguous natural language"
-    output: "Intent (WHAT) + WHY (context) + TBD (unknown info)"
+    input: "AmbiguousRequest（曖昧な要求 / 自然言語）"
+    output: "Intent（WHAT） + WHY（背景） + TBD（不足情報の明示）"
 
     rules:
-      - "Intent-first: No HOW discussion until WHAT is fixed"
-      - "Extract WHY (motivation) from user request"
-      - "Intent must contain WHAT only (no HOW)"
-      - "Do not assume missing info — mark as TBD"
-      - "Clarify until Intent becomes Done (Intent diff allowed)"
-      - "All Intent modifications must be recorded as Intent diff"
+      - "Intent-first: WHAT が確定するまで HOW に進まない"
+      - "ユーザーの要求から WHY（動機）を抽出する"
+      - "Intent = WHAT（やりたいこと）だけを書く。HOW は含めない"
+      - "欠損情報がある場合は推測せず TBD として閉じる（創作禁止）"
+      - "Intent が Done 判定を持つ状態になるまで Clarify（対話または差分、Intent diff）"
+      - "Intent の変更は Intent diff として記録する"
 
     output_schema:
       Intent:
         goal: "<WHAT>"
         why: "<WHY>"
-        TBD?: "<Missing information>"
+        TBD?: "<不足情報>"
 
+  # ==========================================================
+  # 2. Universal IKDD Rules (HOW inference / Implementation derivation)
+  # ==========================================================
   IKDD_Universal:
-    description: "Derives Implementation using HOW constraints and Knowledge"
+    description: "Intent を HOW × Knowledge から Implementation に導出する中核エンジン"
 
     required_blocks:
       - Intent
@@ -61,43 +66,66 @@ IKDD_RuleSet:
 
     HOW:
       structure:
-        must:      "Mandatory rules"
-        forbidden: "Prohibited actions"
-        keep:      "Allowed scope"
-        error:     "Behavior on failure (rollback / no-op)"
+        must:      "必ず守る / 不変条件"
+        forbidden: "禁止 / 副作用ブロック"
+        keep:      "副作用許容範囲 / スコープ"
+        error:     "失敗時の状態（Before に戻る / No-op）"
 
       rule:
-        - "HOW is not step-by-step instruction"
-        - "HOW defines constraints to finalize Implementation"
+        - "HOW は手順ではない。許可 / 禁止 / 範囲 / 失敗時の振る舞いを宣言する"
+        - "HOW は Implementation を確定させるための制約であり、最小化ではなく決定化が目的"
 
     Knowledge:
       rule:
-        - "Knowledge contains API / facts / world rules ONLY"
-        - "HOW content must not leak into Knowledge"
-        - "Only explicitly provided knowledge can be used"
+        - "Knowledge に書けるのは fact / API / world rule のみ"
+        - "HOW の記述を Knowledge に含めてはいけない（役割混同禁止）"
+        - "外部知識は Knowledge に **明示されたものだけ** 使用可能"
 
     Done:
       rule:
-        - "PostCondition for validation"
-        - "If Done is not satisfied, Implementation is invalid"
+        - "PostCondition（実行後の保証）として検収に使う"
+        - "Done 判定を満たさない Implementation は不正とみなす"
 
     implementation_rule:
-      - "Implementation must be the logical result of HOW × Knowledge"
-      - "No creativity or inference — derivation only"
-      - "All output must include PreCondition and PostCondition"
+      - "Implementation = HOW × Knowledge の論理的必然として導出"
+      - "推論・創作は禁止。導出のみ許可"
+      - "全出力には PreCondition / PostCondition を含める"
 
+  # ==========================================================
+  # 3. Phase Switch Rule
+  # ==========================================================
   phase_switch:
     rule: |
-      When phase is IntentOS → only WHAT processing.
-      When phase is IKDD_Universal → derive Implementation.
+      Phaseが IntentOS のときは WHAT の処理のみを行い、
+      Phaseが IKDD_Universal のときは HOW と Knowledge を使用して Implementation を導出する。
     enforced: true
 
+  # ==========================================================
+  # 4. Global No-Hallucination Rules
+  # ==========================================================
   global_rules:
-    - "Unknown must remain UNKNOWN (no invention)"
-    - "External info must exist in Knowledge to be used"
-    - "No Implementation without HOW + Knowledge"
-
+    - "Unknown は UNKNOWN として書く（創作禁止）"
+    - "外部情報は Knowledge に存在するときのみ使用可能"
+    - "HOW / Knowledge が揃っていない状態では Implementation を生成しない"
 ```
+
+---
+
+## ✅ 特徴
+
+| 機能                          | 担当フェーズ | 保証すること                        |
+| --------------------------- | ------ | ----------------------------- |
+| Intent OS (WHATの確定)         | v0.4   | ユーザーが曖昧でも Intent を生成できる       |
+| IKDD Universal Rule (HOW導出) | v0.3   | Implementation が **唯一** に収束する |
+| No hallucination / TBD      | 全体     | 推論ではなく導出、創作禁止                 |
+
+---
+
+## 📌 この YAML を使うと何ができるか？
+
+* IKDD Runtime の「推論エンジンに与えるルール」として使える
+* ChatGPT / gpt-oss / Claude が **毎回同じ出力に収束しやすくなる**
+* Intent OS により、曖昧な質問から Intent を作れる
 
 ---
 
