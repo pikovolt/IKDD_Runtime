@@ -1,96 +1,97 @@
-# IKDD Runtime / Intent OS
+# IKDD Runtime / **Intent OS**
 
-> **Intent First, Code Later.**
-> "Write *WHAT you want*, not HOW to do it."
+> **Intent-first development.**
+> WHAT / WHY is the source of truth — HOW is generated, disposable.
 
-[🇯🇵 日本語 README](README_ja.md)
+[日本語版 README_ja.md](README_ja.md)
 
-> _This README was generated via IKDD / Intent OS (id: Generate_README)._
-
-> **Note:** Some documents in this repository are currently written in Japanese.
-> English migration is in progress.
+> **This README was generated via IKDD / Intent OS (id: Generate_README).**
+> *Some documents are currently written in Japanese. English migration is in progress.*
 
 ---
 
-## ❓ What is IKDD Runtime / Intent OS?
+## 🚀 What is IKDD Runtime / Intent OS
 
-**IKDD (Instrumental Knowledge Driven Development)** + **Intent OS**
-transform software development from *writing implementation* to *defining intent.*
+**IKDD (Instrumental Knowledge Driven Development)**
+and **Intent OS** define a new development style:
 
-- Humans write **Intent (WHAT / WHY)**
-- Runtime determines **HOW** (execution, order, code generation, pipeline)
+> ✅ Write Intent (WHAT/WHY)
+> ✅ Generate HOW (implementation) automatically
+> ✅ Keep Intent as the *single source of truth*
 
-| Concept | Meaning |
-|--------|---------|
-| **Intent** | Desired end-state (WHAT / WHY) |
-| **Runtime / Intent OS** | Determines HOW automatically (execution engine) |
-| **Knowledge** | Externalized (YAML), reusable, versioned |
-
-This repository contains the prototype **IKDD Runtime (v0.x)** that executes intent definitions.
+Implementation is **not authored manually**.
+It is **derived** from Intent.
 
 ---
 
-## 🧠 Why — Problem → Solution
+### ✅ Core concept
 
-### ❌ Traditional (HOW-first development)
+| Layer                    | Responsibility                                            |
+| ------------------------ | --------------------------------------------------------- |
+| **Intent (WHAT / WHY)**  | Goal, purpose, invariants, constraints                    |
+| **Runtime / Kernel**     | Plan, derive, validate, track state (Before/After)        |
+| **Implementation (HOW)** | Generated artifact (code/script/workflow) and replaceable |
 
-- Implementation must be written before anything can run
-- Intent becomes buried inside procedural details
-- Changes break implementation
-
-### ✅ IKDD / Intent OS (WHAT-first development)
-
-> **If Intent is written correctly, HOW becomes deterministic.**
-
-- Intent remains stable even if implementation changes
-- Runtime determines execution strategy & ordering
-- Knowledge becomes reusable instead of disposable
+Intent is stable.
+Implementation is disposable.
 
 ---
 
-## 🚀 Quick Start (minimal)
+## ❓ Why — What problem does IKDD / Intent OS solve?
 
-> No implementation required — just define Intent and run.
+Traditional development mixes **WHAT** and **HOW**, producing:
 
-```sh
-ikdd run intent/InsertNull.yaml
+* Meaning drift (semantic drift, context loss)
+* Manual implementation divergence ("it worked yesterday, now broken")
+* Complexity driven by code, not by intent
+
+**Intent OS reverses the direction:**
+
+> **Intent is the asset. Implementation is a byproduct.**
+
+---
+
+## ⚡ Quick Start (minimal)
+
+```text
+1. Write Intent (WHAT/WHY, no code)
+2. Let Runtime generate HOW
+3. Validate Before/After state
 ```
 
-* Runtime reads Intent
-* Resolves HOW automatically
-* Executes the process / pipeline
+No manual HOW writing.
+No code required in README. (HOW belongs to `/runtime` or `/docs`.)
 
 ---
 
-## ✏️ Minimal Intent Example (fragment only)
+## 🧩 Minimal Intent Example (fragment only)
 
 ```yaml
 id: InsertNullAsParent
-Intent: |
-  Insert a Null as a new parent of the selected model(s),
-  keeping world transform unchanged.
+Intent: Insert a Null as a new parent of the selected models,
+        without changing world transform.
 ```
 
-<sub>Full definitions are stored under `/intent/*.yaml`.</sub>
+*(Full Intent and implementation are intentionally not shown here.
+README.md must not contain HOW.)*
 
 ---
 
 ## 🏗 Runtime Versions
 
-| Version  | Status                         | Link                                                |
-| -------- | ------------------------------ | --------------------------------------------------- |
-| **v0.3** | ✅ Current active prototype     | [`/runtime/v0_3/README.md`](runtime/v0_3/README.md) |
-| **v0.2** | ⚠️ OUTDATED — early experiment | [`/runtime/v0_2/README.md`](runtime/v0_2/README.md) |
-| **v0.1** | ⚠️ OUTDATED — archived         | [`/runtime/v0_1/README.md`](runtime/v0_1/README.md) |
+The repository includes **multiple Runtime prototypes**.
 
-> Only **v0.3** reflects the current architecture.
+| Runtime | Status           | Link                           |
+| ------- | ---------------- | ------------------------------ |
+| `v0.1`  | **OUTDATED**     | [/runtime/v0_1](runtime/v0_1/) |
+| `v0.2`  | **OUTDATED**     | [/runtime/v0_2](runtime/v0_2/) |
+| `v0.3`  | Active prototype | [/runtime/v0_3](runtime/v0_3/) |
+
+> Runtime directories exist for reproducibility, but **implementation details (HOW) are not included here**.
 
 ---
 
 ## 📚 Documents
-
-> **Note:** Some linked documents are still written in Japanese.
-> English updates are in progress.
 
 ### 📖 Concepts & Philosophy
 
@@ -112,25 +113,24 @@ Intent: |
 
 ---
 
-## 📎 Citation (Zenodo DOI)
+## 🔖 Citation (Zenodo DOIs)
 
-If you use this project in research or publications:
+IKDD Runtime / Intent OS consists of *multiple independent published artifacts*.
 
-> DOI: **10.5281/zenodo.17564294**
+| Artifact                         | DOI                                                                                |
+| -------------------------------- | ---------------------------------------------------------------------------------- |
+| **IKDD Unified Rule Set (v0.4)** | [https://doi.org/10.5281/zenodo.17572373](https://doi.org/10.5281/zenodo.17572373) |
+| **Intent OS Concept Paper**      | [https://doi.org/10.5281/zenodo.17564294](https://doi.org/10.5281/zenodo.17564294) |
 
-```
-@software{ikdd_runtime_zenodo,
-  doi = {10.5281/zenodo.17564294},
-  url = {https://doi.org/10.5281/zenodo.17564294},
-  title = {IKDD Runtime / Intent OS},
-  author = {Kanbara, Shouichi (pikovolt)},
-  year = {2025}
-}
-```
+> Cite according to your research or publication policy.
 
 ---
 
-## License
+## Footer
 
-Public concept – shareable with citation.
-*This README was generated via IKDD / Intent OS (id: Generate_README).*
+> **This README was generated via IKDD / Intent OS (id: Generate_README).**
+> No manual edits.
+> WHAT/WHY lives here.
+> HOW lives in `/docs` and `/runtime`.
+
+---
