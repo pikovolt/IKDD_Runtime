@@ -5,7 +5,7 @@ Author: **Shouichi Kanbara (pikovolt)**
 License: **CC BY 4.0 (Attribution required)**
 https://creativecommons.org/licenses/by/4.0/
 
-📎 **DOI (Zenodo):** _TBD – Insert after Zenodo generates DOI_
+📎 **DOI (Zenodo):** https://doi.org/10.5281/zenodo.17572373
 
 ---
 
@@ -103,4 +103,11 @@ IKDD_RuleSet:
 
 ## 3. Citation
 
-> DOI: TBD
+@software{ikdd_unified_ruleset_v04,
+  doi = {10.5281/zenodo.17572373},
+  url = {https://doi.org/10.5281/zenodo.17572373},
+  title = {IKDD Unified Rule Set (v0.4)},
+  author = {Shouichi Kanbara (pikovolt)},
+  year = {2025},
+  license = {CC BY 4.0}
+}
