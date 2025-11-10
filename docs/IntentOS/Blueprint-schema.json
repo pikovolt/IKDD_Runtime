@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "intentos://schema/blueprint/v0.2r1",
+  "title": "IntentOS Blueprint Schema",
+  "description": "Schema for validating IntentOS Blueprint (WHAT definition layer)",
+  "version": "0.2r1",
+
+  "type": "object",
+  "required": ["id", "version", "Intent", "Kernel", "Runtime", "FixedPrinciple", "Meta"],
+
+  "properties": {
+    "id": { "type": "string" },
+    "version": { "type": "string" },
+    "author": { "type": "string" },
+    "updated": { "type": "string", "format": "date" },
+    "Intent": { "type": "string" },
+
+    "Context": {
+      "type": "object",
+      "properties": {
+        "motivation": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "Scope": {
+      "type": "object",
+      "properties": {
+        "include": { "type": "object" },
+        "exclude": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "Kernel": {
+      "type": "object",
+      "required": ["overview", "components"],
+      "properties": {
+        "overview": { "type": "string" },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "role"],
+            "properties": {
+              "name": { "type": "string" },
+              "role": { "type": "string" },
+              "output": {},
+              "input": {},
+              "interface": {},
+              "schema": {}
+            }
+          }
+        }
+      }
+    },
+
+    "Runtime": {
+      "type": "object",
+      "required": ["overview", "components"],
+      "properties": {
+        "overview": { "type": "string" },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "role"],
+            "properties": {
+              "name": { "type": "string" },
+              "role": { "type": "string" },
+              "contract": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "output": {},
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "Relation": {
+      "type": "object",
+      "properties": {
+        "execution_cycle": { "type": "string" }
+      }
+    },
+
+    "Invariant": {
+      "type": "object",
+      "properties": {
+        "universal_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule": { "type": "string" }
+            },
+            "required": ["rule"]
+          }
+        }
+      }
+    },
+
+    "Done": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "FixedPrinciple": {
+      "type": "object",
+      "required": ["description", "decisions", "unresolved"],
+      "properties": {
+        "description": { "type": "string" },
+        "decisions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "unresolved": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "retention_policy": { "type": "string" },
+        "inherited_by": { "type": "string" },
+        "internal_alias": { "type": "string" },
+        "comment": { "type": "string" }
+      }
+    },
+
+    "Meta": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string" },
+        "compatibility": { "type": "string" },
+        "revision": { "type": "string" },
+        "license": { "type": "string" }
+      }
+    }
+  }
+}
