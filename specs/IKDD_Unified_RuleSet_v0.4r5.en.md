@@ -1,0 +1,147 @@
+IKDD_RuleSet:
+  id: IKDD_UNIFIED_RULESET
+  version: 0.4r5
+  description: >
+    A unified rule set that combines Intent OS (WHAT discovery / fixation)
+    and IKDD Universal Rule (HOW derivation).
+    Meta-Anchor guarantees convergence of Intent (fixed-point),
+    enabling deterministic Intent → Implementation generation.
+
+  # ==========================================================
+  # 1. Intent OS (WHAT discovery / Intent-first)
+  # ==========================================================
+  IntentOS:
+    input:  "AmbiguousRequest (natural language / unclear requirement)"
+    output: "Intent (WHAT / WHY / DONE / Constraints / Invariant)"
+
+    rules:
+      - "Do not proceed to HOW until WHAT is fixed."
+      - "Every Intent MUST contain WHAT / WHY / DONE."
+      - "Any missing information MUST be recorded in TBD (no guessing / no invention)."
+      - "Changes in Intent MUST be tracked as Intent diff."
+      - "If TBD contains one or more items, the Intent is considered a draft and
+         HOW / Implementation generation is strictly prohibited."
+
+    output_schema:
+      id: <string>           # Unique identifier of the Intent
+      version: <semver>      # Semantic version (meaning-level versioning)
+      layer: Client | Kernel | Runtime | Meta-Kernel
+
+      Intent:
+        what: <string>       # WHAT: goal / intention
+        why:  <string>       # WHY: reason / motivation / problem-to-solve
+        done: <string>       # DONE: testable goal (no vague natural language)
+
+      Context:
+        inputs?:  [string]
+        outputs?: [string]
+
+      Constraints:
+        must?:      [string]   # Required conditions
+        must_not?:  [string]   # Forbidden actions
+        keep?:      [string]   # Immutable elements (e.g., class definitions)
+        error_if?:  [string]   # When true → revert or stop
+
+      Invariant?: [string]     # Rules that must remain true before/after execution
+
+      Scope:
+        includes?: [string]
+        excludes?: [string]
+
+      TBD?: [string]           # Unknown / unresolved items (must be eliminated)
+
+  # ==========================================================
+  # 2. Meta-Anchor (Intent Fixed-Point / Stop iteration)
+  # ==========================================================
+  MetaAnchor:
+    layer: Meta-Kernel
+    purpose: >
+      Ensures that Meta-Intent exploration stops.
+      Promotes the Intent to a fixed state (final Intent).
+
+    enforced: true
+
+    stop_if:
+      - what_is_single_point        # WHAT converges to a single meaning
+      - why_explained               # WHY is clearly articulated
+      - done_is_testable            # DONE is testable (not vague text)
+      - invariant_defined           # Invariant(s) exist
+      - tbd_is_zero                 # TBD = []
+
+    on_stop:
+      - "Promote Intent from draft → fixed"
+      - "Allow transition to IKDD Universal phase"
+
+    on_fail:
+      - "Push missing items into TBD"
+      - "Return to IntentOS (Meta-Intent continues)"
+
+    output:
+      state: fixed | draft
+      next:  IntentOS | IKDD_Universal
+
+  # ==========================================================
+  # 3. IKDD Universal Rules (HOW derivation / Knowledge usage)
+  # ==========================================================
+  IKDD_Universal:
+    required_blocks:
+      - Intent
+      - HOW
+      - Knowledge
+      - Done
+
+    HOW:
+      structure:
+        must:      "Conditions that MUST be satisfied"
+        forbidden: "Actions that are prohibited"
+        keep:      "Immutable implementation boundary"
+        error:     "Rollback behavior on failure"
+
+      rules:
+        - "HOW is not a procedure. HOW is a constraint."
+        - "Implementation is derived from HOW × Knowledge."
+        - "No guessing. No invention. Only derivation."
+        - "HOW phase can start ONLY when Intent is fixed (TBD = 0)."
+        - "If TBD != [], HOW phase MUST NOT start."
+
+    Knowledge:
+      rules:
+        - "Only facts defined in Knowledge (API/spec/rules) may be used."
+        - "HOW MUST NOT be included inside Knowledge."
+        - "External information may be used only if it exists in Knowledge."
+
+    Done:
+      rules:
+        - "Used as post-condition verification of Implementation."
+        - "If Implementation does not satisfy Done → reject (invalid implementation)."
+
+  # ==========================================================
+  # 4. Phase Switch Rule (State machine)
+  # ==========================================================
+  phase_switch:
+    enforced: true
+    rule: |
+      IntentOS handles WHAT only.
+      Meta-Anchor determines if Intent is fixed (converged).
+      IKDD Universal handles HOW / Knowledge only.
+      Transition to IKDD Universal is allowed ONLY when Intent is fixed (TBD = 0).
+
+  # ==========================================================
+  # 5. Global No-Hallucination Rules
+  # ==========================================================
+  global_rules:
+    - "If unknown, write UNKNOWN (never assume)."
+    - "External information may be used ONLY if included in Knowledge."
+    - "If DONE is not testable, Implementation MUST NOT be generated."
+    - "If Intent is not fixed (TBD != 0), Implementation MUST NOT be generated."
+
+  # ==========================================================
+  # 6. License (for Rule Set / Schema / Specification)
+  # ==========================================================
+  License:
+    type: CC-BY-4.0
+    url: https://creativecommons.org/licenses/by/4.0/
+    notice: >
+      You are free to share and adapt this Rule Set, including commercial use,
+      as long as credit is given to the original author:
+      "IKDD Unified Rule Set — © 2025 Shouichi Kanbara (pikovolt)"
